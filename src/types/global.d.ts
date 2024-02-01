@@ -1,7 +1,7 @@
 export { };
 
 declare global {
-    type Token = {
+    export type Token = {
         address: string
         chainId: number
         symbol: string
@@ -12,7 +12,7 @@ declare global {
         priceUSD: string
     }
 
-    type Chain = {
+    export type Chain = {
         key: string
         chainType: string
         name: string
