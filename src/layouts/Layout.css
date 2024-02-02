@@ -33,7 +33,7 @@
     left: -50px;
     top: -300px;
     z-index: 3;
-    animation: fly 12s linear infinite;
+    animation: fly 10s linear infinite;
     transform: rotate(0) translate(80px) rotate(0);
 }
 
@@ -44,6 +44,6 @@
     bottom: -80px;
     right: -100px;
     background-color: #7d1cd1b8;
-    animation: flyPlus 12s linear infinite;
+    animation: flyPlus 10s linear infinite;
     transform: rotate(0) translate(100px) rotate(0);
 }

@@ -1,12 +1,13 @@
-import WalletPopverButton from "@/components/WalletPopverButton";
+import { useState } from "react";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
+import WalletPopverButton from "@/components/WalletPopverButton";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-const Header = () => {
+
+const Header = ({ chain }: { chain: Chain | undefined }) => {
     const { connect, connectors } = useConnect();
     const { address } = useAccount();
     const { disconnect } = useDisconnect();
@@ -16,14 +17,14 @@ const Header = () => {
     return (
         <div
             id="header"
-            className="w-100 min-h-[10vh] flex items-center justify-between px-16 pt-5 text-white"
+            className="w-100 min-h-[10vh] flex items-center justify-between gap-x-1 sm:gap-x-0 px-2 md:px-16 pt-5 text-white"
         >
-            <div className="flex flex-col justify-end gap-y-1">
-                <h1 className="text-4xl font-mono tracking-wider border-b pb-1">
+            <div className="w-[140px] sm:w-auto flex flex-col justify-end gap-y-1">
+                <h1 className="text-xl md:text-4xl font-mono tracking-wider border-b pb-1">
                     ReDeX
                 </h1>
-                <p>won't take fee.</p>
-                <p>
+                <p className="text-sm md:text-auto">doesn't take fee.</p>
+                <p className="text-xs md:text-auto break-words">
                     Develop by{" "}
                     <a href="https://github.com/amir-alipour" target="_blank">
                         Amir Alipour
@@ -37,9 +38,22 @@ const Header = () => {
                         open={popoverIsOpen}
                         onOpenChange={setPopoverIsOpen}
                     >
-                        <PopoverTrigger className="isolate rounded-xl bg-white/20 shadow-[0px_5px_100px_0px_#f7fafc] ring-1 ring-black/5 p-4 border flex items-center justify-between gap-x-3 mr-3 mt-3">
-                            <img src="/metamask.svg" alt="metamask icon" />
-                            <p className="font-mono">
+                        <PopoverTrigger className="isolate rounded-xl bg-white/20 shadow-[0px_5px_100px_0px_#f7fafc] ring-1 ring-black/5 p-4 pl-2 sm:p-4 border flex items-center justify-between gap-x-1 sm:gap-x-3 sm:mr-3 mt-3">
+                            <div className="relative">
+                                <img
+                                    className="w-5 h-5 sm:w-auto sm:h-auto"
+                                    src="/metamask.svg"
+                                    alt="metamask icon"
+                                />
+                                {chain && (
+                                    <img
+                                        className="absolute -right-2 -bottom-2 w-4 h-4 sm:w-[20px] sm:h-[20px] rounded-full shadow-lg"
+                                        src={chain.logoURI}
+                                        alt={chain.name + " icon"}
+                                    />
+                                )}
+                            </div>
+                            <p className="text-xs sm:text-lg font-mono">
                                 {address.slice(0, 5)}...
                                 {address
                                     .split("")
@@ -50,15 +64,24 @@ const Header = () => {
                         </PopoverTrigger>
                         <PopoverContent className="isolate rounded-xl bg-white/20 shadow-xl ring-1 ring-black/5 flex flex-col items-center gap-y-6">
                             <div className="flex flex-col items-center gap-y-3">
-                                <div className="w-[90px] h-[90px] flex items-center justify-center bg-white rounded-full mt-4">
-                                    <img
-                                        src="/metamask.svg"
-                                        alt="metamask icon"
-                                        className="w-[60px] h-[60px]"
-                                    />
+                                <div className="shadow-xl relative w-[90px] h-[90px] flex items-center justify-center bg-white rounded-full mt-4">
+                                    <div>
+                                        <img
+                                            src="/metamask.svg"
+                                            alt="metamask icon"
+                                            className="w-[60px] h-[60px] "
+                                        />
+                                        {chain && (
+                                            <img
+                                                className="absolute -right-3 -bottom-3 w-[40px] h-[40px] rounded-full shadow-lg"
+                                                src={chain.logoURI}
+                                                alt={chain.name + " icon"}
+                                            />
+                                        )}
+                                    </div>
                                 </div>
                                 <div>
-                                    <p className="text-lg font-bold text-white">
+                                    <p className="text-lg font-bold text-white truncate">
                                         {address.slice(0, 5)}...
                                         {address
                                             .split("")
@@ -98,7 +121,7 @@ const Header = () => {
                                     clickHandler={() => {
                                         window
                                             .open(
-                                                `https://ftmscan.com/address/${address}`,
+                                                `${chain?.metamask.blockExplorerUrls[0]}address/${address}`,
                                                 "_blank"
                                             )
                                             ?.focus();

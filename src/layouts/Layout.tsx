@@ -1,7 +1,12 @@
+import { useChains } from "@/hooks/useChains";
 import "./Layout.css";
 import Header from "./header/Header";
+import { useChainId } from "wagmi";
 
 const Layout = () => {
+    const { data: chainList } = useChains();
+    const chainId = useChainId();
+
     return (
         <div className="realative w-100 min-h-screen font-sans">
             {/* background animation section */}
@@ -11,10 +16,10 @@ const Layout = () => {
             </div>
 
             {/* header section */}
-            <Header />
+            <Header chain={chainList?.filter(chain => chain.id === chainId)[0]} />
 
             {/* body section */}
-            <div id="main" className="w-100 min-h-[90vh]"></div>
+            <div id="main" className="w-100 min-h-[87.7vh]"></div>
         </div>
     );
 };
