@@ -23,9 +23,9 @@ const Header = ({ chain }: { chain: Chain | undefined }) => {
                 <h1 className="text-xl md:text-4xl font-mono tracking-wider border-b pb-1">
                     ReDeX
                 </h1>
-                <p className="text-sm md:text-auto">doesn't take fee.</p>
+                <p className="text-sm md:text-auto">doesn't take a fee.</p>
                 <p className="text-xs md:text-auto break-words">
-                    Develop by{" "}
+                    Developed by{" "}
                     <a href="https://github.com/amir-alipour" target="_blank">
                         Amir Alipour
                     </a>
