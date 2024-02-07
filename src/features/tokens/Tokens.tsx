@@ -6,17 +6,20 @@ import {
 } from "@/components/ui/tooltip";
 import { ViewsState } from "../wrapper/BoxWrapper";
 import { Variants, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { AutoSizer, List } from "react-virtualized";
+import Token from "@/components/Token";
 
 type TokensProps = {
     chains: Chain[] | undefined;
     viewHandler: React.Dispatch<React.SetStateAction<ViewsState>>;
     onSelecting: "from" | "to";
     selectedChain: {
-        fromChain: number;
-        setFromChain: React.Dispatch<React.SetStateAction<number>>;
-        toChain: number | null;
-        setToChain: React.Dispatch<React.SetStateAction<number | null>>;
+        chain: number | null;
+        setChain: React.Dispatch<React.SetStateAction<number | null>>;
     };
+    setToken: React.Dispatch<React.SetStateAction<Token | null>>;
 };
 
 const Tokens = ({
@@ -24,7 +27,37 @@ const Tokens = ({
     viewHandler,
     onSelecting,
     selectedChain,
+    setToken,
 }: TokensProps) => {
+    const [tokens, setTokens] = useState<Token[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [searchTerm, setSearchTerm] = useState<string>("");
+
+    useEffect(() => {
+        if (selectedChain.chain) {
+            setIsLoading(true);
+            axios
+                .get(`https://li.quest/v1/tokens?chains=${selectedChain.chain}`)
+                .then((res) => res.data.tokens)
+                .then((data) => {
+                    setTokens([...data[selectedChain.chain!]]);
+                    setIsLoading(false);
+                });
+        }
+
+        return () => {
+            setTokens([]);
+        };
+    }, [selectedChain.chain]);
+
+    const handleFilterTokens = (item: any) => {
+        return (
+            item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.address === searchTerm
+        );
+    };
+
     return (
         <>
             <motion.div
@@ -76,21 +109,10 @@ const Tokens = ({
                                 <Tooltip delayDuration={150}>
                                     <TooltipTrigger
                                         onClick={() => {
-                                            if (onSelecting === "from") {
-                                                selectedChain.setFromChain(
-                                                    chain.id
-                                                );
-                                            } else {
-                                                selectedChain.setToChain(
-                                                    chain.id
-                                                );
-                                            }
+                                            selectedChain.setChain(chain.id);
                                         }}
                                         className={` p-2.5 border rounded-lg ${
-                                            (onSelecting === "from"
-                                                ? selectedChain.fromChain
-                                                : selectedChain.toChain) ===
-                                            chain.id
+                                            selectedChain.chain === chain.id
                                                 ? "bg-white bg-opacity-25 border-white"
                                                 : "border-gray-400"
                                         } hover:border-gray-200`}
@@ -123,6 +145,7 @@ const Tokens = ({
                 className="w-full h-[50px] flex items-center border border-gray-300 rounded-lg"
             >
                 <input
+                    onChange={(e) => setSearchTerm(e.target.value)}
                     type="text"
                     placeholder="Search by token name or address"
                     className="flex-1 h-full px-3 bg-transparent outline-none bordr-none"
@@ -146,7 +169,53 @@ const Tokens = ({
             </motion.div>
             {/* Search Section */}
 
-            <div className="w-full h-[300px]"></div>
+            <motion.div
+                variants={{
+                    hidden: { opacity: 0 },
+                    visible: { opacity: 1 },
+                    exit: { opacity: 0 },
+                }}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="w-full h-[330px] -mb-6 -mt-2"
+            >
+                {isLoading ? (
+                    <div className="w-full h-[50px] flex items-center justify-center text-xl">
+                        Loading Tokens ...
+                    </div>
+                ) : (
+                    <AutoSizer>
+                        {({ width, height }) => (
+                            <List
+                                width={width}
+                                height={height}
+                                rowHeight={60}
+                                rowRenderer={(props) => (
+                                    <Token
+                                        onclick={(token: Token) => {
+                                            setToken(token);
+                                            viewHandler("exchange");
+                                        }}
+                                        data={
+                                            [...tokens].filter(
+                                                handleFilterTokens
+                                            )[props.index]
+                                        }
+                                        key={props.key}
+                                        style={props.style}
+                                    />
+                                )}
+                                rowCount={
+                                    [...tokens].filter(handleFilterTokens)
+                                        .length
+                                }
+                                overscanRowCount={3}
+                            />
+                        )}
+                    </AutoSizer>
+                )}
+            </motion.div>
             {/* Tokens Section */}
         </>
     );

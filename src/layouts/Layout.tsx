@@ -26,7 +26,7 @@ const Layout = () => {
                     id="main"
                     className="w-100 min-h-[87.7vh] flex items-start justify-center pt-24"
                 >
-                    <BoxWrapper chains={chainList} />
+                    {chainList && <BoxWrapper chains={chainList} />}
                 </div>
                 {/* body section */}
             </div>

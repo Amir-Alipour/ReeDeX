@@ -1,15 +1,28 @@
 import "./Exchange.css";
 import { ViewsState } from "../wrapper/BoxWrapper";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 type ExchangeProps = {
     handlers: {
         viewHandler: React.Dispatch<React.SetStateAction<ViewsState>>;
         onSelectingHandler: React.Dispatch<React.SetStateAction<"from" | "to">>;
     };
+    chain: {
+        fromChain: number | null;
+        toChain: number | null;
+    };
+    token: {
+        fromToken: Token | null;
+        toToken: Token | null;
+    };
+    chains: Chain[] | undefined;
 };
 
-const Exchange = ({ handlers }: ExchangeProps) => {
+const Exchange = ({ handlers, chain, token, chains }: ExchangeProps) => {
+    const [useDifferentWallet, setUseDifferentWallet] =
+        useState<boolean>(false);
+
     return (
         <>
             <motion.h1
@@ -44,13 +57,46 @@ const Exchange = ({ handlers }: ExchangeProps) => {
                     <h3 className="text-sm">From</h3>
                     <div className="flex items-center gap-x-4">
                         <div className="relative">
-                            <div className="rounded-full w-[40px] h-[40px] bg-stone-700"></div>
-                            <div className="absolute -bottom-0.5 -right-0.5 border-2 border-stone-800 rounded-full w-[17px] h-[17px] bg-stone-700"></div>
+                            {chain.fromChain && token.fromToken ? (
+                                <>
+                                    <img
+                                        src={token.fromToken.logoURI}
+                                        className="rounded-full w-[40px] h-[40px] bg-stone-700"
+                                    />
+                                    <img
+                                        src={
+                                            chains?.find(
+                                                (c) => c.id === chain.fromChain
+                                            )?.logoURI
+                                        }
+                                        className="absolute -bottom-0.5 -right-0.5 border-2 border-stone-800 rounded-full w-[17px] h-[17px] bg-stone-700"
+                                    />
+                                </>
+                            ) : (
+                                <>
+                                    <div className="rounded-full w-[40px] h-[40px] bg-stone-700"></div>
+                                    <div className="absolute -bottom-0.5 -right-0.5 border-2 border-stone-800 rounded-full w-[17px] h-[17px] bg-stone-700"></div>
+                                </>
+                            )}
                         </div>
                         <div>
-                            <p className="text-xl font-light mt-1 text-gray-400">
-                                Select chain and token
-                            </p>
+                            {chain.fromChain && token.fromToken ? (
+                                <div>
+                                    <p>{token.fromToken.symbol}</p>
+                                    <p className="text-xs text-gray-400">
+                                        on{" "}
+                                        {
+                                            chains?.find(
+                                                (c) => c.id === chain.fromChain
+                                            )?.name
+                                        }
+                                    </p>
+                                </div>
+                            ) : (
+                                <p className="text-xl font-light mt-1 text-gray-400">
+                                    Select chain and token
+                                </p>
+                            )}
                         </div>
                     </div>
                 </motion.div>
@@ -91,13 +137,46 @@ const Exchange = ({ handlers }: ExchangeProps) => {
                     <h3 className="text-sm">To</h3>
                     <div className="flex items-center gap-x-4">
                         <div className="relative">
-                            <div className="rounded-full w-[40px] h-[40px] bg-stone-700"></div>
-                            <div className="absolute -bottom-0.5 -right-0.5 border-2 border-stone-800 rounded-full w-[17px] h-[17px] bg-stone-700"></div>
+                            {chain.toChain && token.toToken ? (
+                                <>
+                                    <img
+                                        src={token.toToken.logoURI}
+                                        className="rounded-full w-[40px] h-[40px] bg-stone-700"
+                                    />
+                                    <img
+                                        src={
+                                            chains?.find(
+                                                (c) => c.id === chain.toChain
+                                            )?.logoURI
+                                        }
+                                        className="absolute -bottom-0.5 -right-0.5 border-2 border-stone-800 rounded-full w-[17px] h-[17px] bg-stone-700"
+                                    />
+                                </>
+                            ) : (
+                                <>
+                                    <div className="rounded-full w-[40px] h-[40px] bg-stone-700"></div>
+                                    <div className="absolute -bottom-0.5 -right-0.5 border-2 border-stone-800 rounded-full w-[17px] h-[17px] bg-stone-700"></div>
+                                </>
+                            )}
                         </div>
                         <div>
-                            <p className="text-xl font-light mt-1 text-gray-400">
-                                Select chain and token
-                            </p>
+                            {chain.toChain && token.toToken ? (
+                                <div>
+                                    <p>{token.toToken.symbol}</p>
+                                    <p className="text-xs text-gray-400">
+                                        on{" "}
+                                        {
+                                            chains?.find(
+                                                (c) => c.id === chain.toChain
+                                            )?.name
+                                        }
+                                    </p>
+                                </div>
+                            ) : (
+                                <p className="text-xl font-light mt-1 text-gray-400">
+                                    Select chain and token
+                                </p>
+                            )}
                         </div>
                     </div>
                 </motion.div>
@@ -128,14 +207,29 @@ const Exchange = ({ handlers }: ExchangeProps) => {
             {/* Pay Section */}
 
             <motion.div
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                variants={animate}
-                className="w-full h-[80px] flex flex-col gap-y-1 items-start p-3 rounded-xl border border-gray-400"
+                variants={{
+                    hidden: { visibility: "hidden", height: 0 },
+                    visible: { visibility: "visible", height: "80px" },
+                }}
+                animate={useDifferentWallet ? "visible" : "hidden"}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
             >
-                <h3 className="text-sm">Send to a different wallet</h3>
-                <p className="text-md mt-1 text-gray-400">Wallet address</p>
+                <motion.div
+                    variants={{
+                        hidden: { x: 100, opacity: 0 },
+                        visible: { x: 0, opacity: 1 },
+                    }}
+                    animate={useDifferentWallet ? "visible" : "hidden"}
+                    transition={{
+                        duration: 0.4,
+                        ease: "easeInOut",
+                        delay: 0.1,
+                    }}
+                    className="w-full h-[80px] flex flex-col gap-y-1 items-start p-3 rounded-xl border border-gray-400"
+                >
+                    <h3 className="text-sm">Send to a different wallet</h3>
+                    <p className="text-md mt-1 text-gray-400">Wallet address</p>
+                </motion.div>
             </motion.div>
             {/* Different Wallet Section */}
 
@@ -149,7 +243,10 @@ const Exchange = ({ handlers }: ExchangeProps) => {
                 <button className="flex-1 h-[50px] rounded-full flex items-center justify-center bg-white text-black text-lg tracking-wide hover:shadow-xl hover:shadow-gray-900">
                     Exchange
                 </button>
-                <div className="w-[50px] h-[50px] rounded-full border flex items-center justify-center">
+                <div
+                    onClick={() => setUseDifferentWallet((prev) => !prev)}
+                    className="w-[50px] h-[50px] rounded-full border flex items-center justify-center cursor-pointer"
+                >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"

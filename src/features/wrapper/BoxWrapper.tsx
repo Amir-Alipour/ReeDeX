@@ -13,9 +13,9 @@ export type ViewsState = "exchange" | "tokens" | "chains";
 const BoxWrapper = ({ chains }: BoxWrapperProps) => {
     const chainId = useChainId();
 
-    // const [fromToken, setFromToken] = useState<string>("");
-    // const [toToken, setToToken] = useState<string>("");
-    const [fromChain, setFromChain] = useState<number>(chainId);
+    const [fromToken, setFromToken] = useState<Token | null>(null);
+    const [toToken, setToToken] = useState<Token | null>(null);
+    const [fromChain, setFromChain] = useState<number | null>(chainId);
     const [toChain, setToChain] = useState<number | null>(null);
     // const [fromAddress, setFromAdress] = useState<string>("");
     // const [toAdress, setToAdress] = useState<string>(fromAddress);
@@ -33,6 +33,15 @@ const BoxWrapper = ({ chains }: BoxWrapperProps) => {
                     viewHandler: setPage,
                     onSelectingHandler: setOnSelecting,
                 }}
+                chain={{
+                    fromChain,
+                    toChain,
+                }}
+                token={{
+                    fromToken,
+                    toToken,
+                }}
+                chains={chains}
             />
         ),
         tokens: (
@@ -42,11 +51,11 @@ const BoxWrapper = ({ chains }: BoxWrapperProps) => {
                 viewHandler={setPage}
                 onSelecting={onSelecting}
                 selectedChain={{
-                    fromChain,
-                    setFromChain,
-                    toChain,
-                    setToChain
+                    chain: onSelecting === "from" ? fromChain : toChain,
+                    setChain:
+                        onSelecting === "from" ? setFromChain : setToChain,
                 }}
+                setToken={onSelecting === "from" ? setFromToken : setToToken}
             />
         ),
         chains: <></>,
