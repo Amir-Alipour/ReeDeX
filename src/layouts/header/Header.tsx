@@ -6,13 +6,16 @@ import {
 } from "@/components/ui/popover";
 import WalletPopverButton from "@/components/WalletPopverButton";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { useStateContext } from "@/context/state";
 
-const Header = ({ chain }: { chain: Chain | undefined }) => {
+const Header = () => {
     const { connect, connectors } = useConnect();
     const { address } = useAccount();
     const { disconnect } = useDisconnect();
 
     const [popoverIsOpen, setPopoverIsOpen] = useState<boolean>(false);
+
+    const { state } = useStateContext();
 
     return (
         <div
@@ -45,11 +48,11 @@ const Header = ({ chain }: { chain: Chain | undefined }) => {
                                     src="/metamask.svg"
                                     alt="metamask icon"
                                 />
-                                {chain && (
+                                {state.chains && (
                                     <img
                                         className="absolute -right-2 -bottom-2 w-4 h-4 sm:w-[20px] sm:h-[20px] rounded-full shadow-lg"
-                                        src={chain.logoURI}
-                                        alt={chain.name + " icon"}
+                                        src={state.walletChain?.logoURI}
+                                        alt={state.walletChain?.name + " icon"}
                                     />
                                 )}
                             </div>
@@ -71,11 +74,14 @@ const Header = ({ chain }: { chain: Chain | undefined }) => {
                                             alt="metamask icon"
                                             className="w-[60px] h-[60px] "
                                         />
-                                        {chain && (
+                                        {state.walletChain && (
                                             <img
                                                 className="absolute -right-3 -bottom-3 w-[40px] h-[40px] rounded-full shadow-lg"
-                                                src={chain.logoURI}
-                                                alt={chain.name + " icon"}
+                                                src={state.walletChain?.logoURI}
+                                                alt={
+                                                    state.walletChain?.name +
+                                                    " icon"
+                                                }
                                             />
                                         )}
                                     </div>
@@ -121,7 +127,7 @@ const Header = ({ chain }: { chain: Chain | undefined }) => {
                                     clickHandler={() => {
                                         window
                                             .open(
-                                                `${chain?.metamask.blockExplorerUrls[0]}address/${address}`,
+                                                `${state.walletChain?.metamask.blockExplorerUrls[0]}address/${address}`,
                                                 "_blank"
                                             )
                                             ?.focus();

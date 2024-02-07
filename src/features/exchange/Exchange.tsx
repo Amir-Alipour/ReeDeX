@@ -2,26 +2,18 @@ import "./Exchange.css";
 import { ViewsState } from "../wrapper/BoxWrapper";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useStateContext } from "@/context/state";
 
 type ExchangeProps = {
     handlers: {
         viewHandler: React.Dispatch<React.SetStateAction<ViewsState>>;
         onSelectingHandler: React.Dispatch<React.SetStateAction<"from" | "to">>;
     };
-    chain: {
-        fromChain: number | null;
-        toChain: number | null;
-    };
-    token: {
-        fromToken: Token | null;
-        toToken: Token | null;
-    };
-    chains: Chain[] | undefined;
 };
 
-const Exchange = ({ handlers, chain, token, chains }: ExchangeProps) => {
-    const [useDifferentWallet, setUseDifferentWallet] =
-        useState<boolean>(false);
+const Exchange = ({ handlers }: ExchangeProps) => {
+    const [useDifferentWallet, setUseDifferentWallet] = useState(false);
+    const { state } = useStateContext();
 
     return (
         <>
@@ -57,16 +49,16 @@ const Exchange = ({ handlers, chain, token, chains }: ExchangeProps) => {
                     <h3 className="text-sm">From</h3>
                     <div className="flex items-center gap-x-4">
                         <div className="relative">
-                            {chain.fromChain && token.fromToken ? (
+                            {state.fromChain && state.fromToken ? (
                                 <>
                                     <img
-                                        src={token.fromToken.logoURI}
+                                        src={state.fromToken.logoURI}
                                         className="rounded-full w-[40px] h-[40px] bg-stone-700"
                                     />
                                     <img
                                         src={
-                                            chains?.find(
-                                                (c) => c.id === chain.fromChain
+                                            state.chains?.find(
+                                                (c) => c.id === state.fromChain
                                             )?.logoURI
                                         }
                                         className="absolute -bottom-0.5 -right-0.5 border-2 border-stone-800 rounded-full w-[17px] h-[17px] bg-stone-700"
@@ -80,14 +72,14 @@ const Exchange = ({ handlers, chain, token, chains }: ExchangeProps) => {
                             )}
                         </div>
                         <div>
-                            {chain.fromChain && token.fromToken ? (
+                            {state.fromChain && state.fromToken ? (
                                 <div>
-                                    <p>{token.fromToken.symbol}</p>
+                                    <p>{state.fromToken.symbol}</p>
                                     <p className="text-xs text-gray-400">
                                         on{" "}
                                         {
-                                            chains?.find(
-                                                (c) => c.id === chain.fromChain
+                                            state.chains?.find(
+                                                (c) => c.id === state.fromChain
                                             )?.name
                                         }
                                     </p>
@@ -137,16 +129,16 @@ const Exchange = ({ handlers, chain, token, chains }: ExchangeProps) => {
                     <h3 className="text-sm">To</h3>
                     <div className="flex items-center gap-x-4">
                         <div className="relative">
-                            {chain.toChain && token.toToken ? (
+                            {state.toChain && state.toToken ? (
                                 <>
                                     <img
-                                        src={token.toToken.logoURI}
+                                        src={state.toToken.logoURI}
                                         className="rounded-full w-[40px] h-[40px] bg-stone-700"
                                     />
                                     <img
                                         src={
-                                            chains?.find(
-                                                (c) => c.id === chain.toChain
+                                            state.chains?.find(
+                                                (c) => c.id === state.toChain
                                             )?.logoURI
                                         }
                                         className="absolute -bottom-0.5 -right-0.5 border-2 border-stone-800 rounded-full w-[17px] h-[17px] bg-stone-700"
@@ -160,14 +152,14 @@ const Exchange = ({ handlers, chain, token, chains }: ExchangeProps) => {
                             )}
                         </div>
                         <div>
-                            {chain.toChain && token.toToken ? (
+                            {state.toChain && state.toToken ? (
                                 <div>
-                                    <p>{token.toToken.symbol}</p>
+                                    <p>{state.toToken.symbol}</p>
                                     <p className="text-xs text-gray-400">
                                         on{" "}
                                         {
-                                            chains?.find(
-                                                (c) => c.id === chain.toChain
+                                            state.chains?.find(
+                                                (c) => c.id === state.toChain
                                             )?.name
                                         }
                                     </p>

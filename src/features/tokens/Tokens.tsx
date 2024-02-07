@@ -10,37 +10,31 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { AutoSizer, List } from "react-virtualized";
 import Token from "@/components/Token";
+import { useStateContext } from "@/context/state";
 
 type TokensProps = {
-    chains: Chain[] | undefined;
     viewHandler: React.Dispatch<React.SetStateAction<ViewsState>>;
     onSelecting: "from" | "to";
-    selectedChain: {
-        chain: number | null;
-        setChain: React.Dispatch<React.SetStateAction<number | null>>;
-    };
-    setToken: React.Dispatch<React.SetStateAction<Token | null>>;
 };
 
-const Tokens = ({
-    chains,
-    viewHandler,
-    onSelecting,
-    selectedChain,
-    setToken,
-}: TokensProps) => {
+const Tokens = ({ viewHandler, onSelecting }: TokensProps) => {
+    const { state, dispatch } = useStateContext();
+
+    const isFrom = () => (onSelecting === "from" ? true : false);
+    const getChain = () => (isFrom() ? state.fromChain : state.toChain);
+
     const [tokens, setTokens] = useState<Token[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>("");
 
     useEffect(() => {
-        if (selectedChain.chain) {
+        if (getChain()) {
             setIsLoading(true);
             axios
-                .get(`https://li.quest/v1/tokens?chains=${selectedChain.chain}`)
+                .get(`https://li.quest/v1/tokens?chains=${getChain()}`)
                 .then((res) => res.data.tokens)
                 .then((data) => {
-                    setTokens([...data[selectedChain.chain!]]);
+                    setTokens([...data[getChain()!]]);
                     setIsLoading(false);
                 });
         }
@@ -48,7 +42,7 @@ const Tokens = ({
         return () => {
             setTokens([]);
         };
-    }, [selectedChain.chain]);
+    }, [getChain()]);
 
     const handleFilterTokens = (item: any) => {
         return (
@@ -102,17 +96,27 @@ const Tokens = ({
                 exit="exit"
                 className="grid grid-cols-5 grid-rows-2 gap-4"
             >
-                {chains?.map(
+                {state.chains?.map(
                     (chain, index) =>
                         index < 9 && (
                             <TooltipProvider key={chain.id}>
                                 <Tooltip delayDuration={150}>
                                     <TooltipTrigger
                                         onClick={() => {
-                                            selectedChain.setChain(chain.id);
+                                            if (isFrom()) {
+                                                dispatch({
+                                                    type: "SET_FROM_CHAIN",
+                                                    payload: chain.id,
+                                                });
+                                            } else {
+                                                dispatch({
+                                                    type: "SET_TO_CHAIN",
+                                                    payload: chain.id,
+                                                });
+                                            }
                                         }}
                                         className={` p-2.5 border rounded-lg ${
-                                            selectedChain.chain === chain.id
+                                            getChain() === chain.id
                                                 ? "bg-white bg-opacity-25 border-white"
                                                 : "border-gray-400"
                                         } hover:border-gray-200`}
@@ -131,7 +135,7 @@ const Tokens = ({
                         )
                 )}
                 <div className="flex items-center justify-center text-lg p-2.5 border border-gray-400 rounded-lg hover:border-gray-200 cursor-pointer">
-                    +{chains?.length! - 9}
+                    +{state.chains?.length! - 9}
                 </div>
             </motion.div>
             {/* Chains Section */}
@@ -194,7 +198,17 @@ const Tokens = ({
                                 rowRenderer={(props) => (
                                     <Token
                                         onclick={(token: Token) => {
-                                            setToken(token);
+                                            if (isFrom()) {
+                                                dispatch({
+                                                    type: "SET_FROM_TOKEN",
+                                                    payload: token,
+                                                });
+                                            } else {
+                                                dispatch({
+                                                    type: "SET_TO_TOKEN",
+                                                    payload: token,
+                                                });
+                                            }
                                             viewHandler("exchange");
                                         }}
                                         data={
