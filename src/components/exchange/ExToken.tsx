@@ -29,7 +29,7 @@ const ExToken = ({ title, chain, token }: ExTokenProps) => {
 
     return (
         <motion.div
-            onClick={() => goToTokens("from")}
+            onClick={() => goToTokens(title.toLowerCase() as "from" | "to")}
             initial="hidden"
             animate="visible"
             exit="exit"
