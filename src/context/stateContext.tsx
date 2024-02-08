@@ -8,7 +8,7 @@ export const initialState: StateType = {
     toChain: null,
     fromAddress: "",
     toAddress: "",
-    amount: 0,
+    amount: "",
     chains: undefined,
     walletChain: undefined,
 };

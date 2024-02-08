@@ -5,7 +5,7 @@ export interface StateType {
     toChain: number | null;
     fromAddress: string;
     toAddress: string;
-    amount: number;
+    amount: string;
     chains: Chain[] | undefined;
     walletChain: Chain | undefined;
 }
@@ -17,6 +17,6 @@ export type StateActionType =
     | { type: 'SET_TO_CHAIN'; payload: number | null }
     | { type: 'SET_FROM_ADDRESS'; payload: string }
     | { type: 'SET_TO_ADDRESS'; payload: string }
-    | { type: 'SET_AMOUNT'; payload: number }
+    | { type: 'SET_AMOUNT'; payload: string }
     | { type: 'SET_CHAINS'; payload: Chain[] | undefined }
     | { type: 'SET_WALLET_CHAIN'; payload: Chain | undefined };

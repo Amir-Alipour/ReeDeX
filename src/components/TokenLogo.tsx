@@ -9,7 +9,7 @@ const TokenLogo = ({ token, chain }: TokenLogoProps) => {
     const { state } = useStateContext();
 
     return (
-        <div className="relative">
+        <div className="relative w-[40px] h-[40px]">
             {chain && token ? (
                 <>
                     <img
