@@ -4,6 +4,8 @@ import { createContext, useContext, useReducer } from "react";
 export const initialState: ViewType = {
     currentView: "exchange",
     onSelecting: "from",
+    haveWarning: false,
+    warningMessage: "",
 };
 
 export const reducer = (state: ViewType, action: ViewActionType): ViewType => {
@@ -12,6 +14,10 @@ export const reducer = (state: ViewType, action: ViewActionType): ViewType => {
             return { ...state, currentView: action.payload };
         case "SET_ON_SELECTING":
             return { ...state, onSelecting: action.payload };
+        case "SET_HAVE_WARNING":
+            return { ...state, haveWarning: action.payload };
+        case "SET_WARNING_MESSAGE":
+            return { ...state, warningMessage: action.payload };
         default:
             return state;
     }

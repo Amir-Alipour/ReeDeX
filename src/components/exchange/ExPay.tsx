@@ -5,6 +5,7 @@ import TokenLogo from "../TokenLogo";
 import { useAccount } from "wagmi";
 import { LiFi, Token, TokenAmount } from "@lifi/sdk";
 import { useEffect, useState } from "react";
+import { useViewContext } from "@/context/viewContext";
 
 const lifi = new LiFi({
     integrator: "ReDeX",
@@ -12,6 +13,7 @@ const lifi = new LiFi({
 
 const ExPay = () => {
     const { state, dispatch } = useStateContext();
+    const { dispatch: viewDispatch } = useViewContext();
     const { address } = useAccount();
     const [balance, setBalance] = useState<TokenAmount[]>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -29,13 +31,29 @@ const ExPay = () => {
         }
     }, [state.fromToken]);
 
+    useEffect(() => {
+        if (parseFloat(state.amount) > parseFloat(balance?.[0].amount!)) {
+            viewDispatch({ type: "SET_HAVE_WARNING", payload: true });
+            viewDispatch({
+                type: "SET_WARNING_MESSAGE",
+                payload:
+                    "You don't have enough funds to complete the transaction.",
+            });
+        } else {
+            viewDispatch({ type: "SET_HAVE_WARNING", payload: false });
+            viewDispatch({
+                type: "SET_WARNING_MESSAGE",
+                payload: "",
+            });
+        }
+    }, [state.amount]);
+
     const handleChangeAmount = (amount: string) => {
         if (
             !state.fromChain ||
             !state.fromToken ||
             !/^\d*\.?\d*$/.test(amount) ||
-            amount.length > 19 ||
-            parseFloat(amount) > parseFloat(balance?.[0].amount!)
+            amount.length > 19
         )
             return;
 

@@ -1,11 +1,13 @@
 import "./Exchange.css";
 import { motion } from "framer-motion";
-import { useState } from "react";
 import { useStateContext } from "@/context/stateContext";
 import { rightToLeftAnimate } from "@/lib/framer-variants";
 import ExToken from "@/components/exchange/ExToken";
 import ReverseBtn from "@/components/exchange/ReverseBtn";
 import ExPay from "@/components/exchange/ExPay";
+import ExWarning from "@/components/exchange/ExWarning";
+import ExDiffWallet from "@/components/exchange/ExDiffWallet";
+import { useState } from "react";
 
 const Exchange = () => {
     const [useDifferentWallet, setUseDifferentWallet] = useState(false);
@@ -50,32 +52,11 @@ const Exchange = () => {
             <ExPay />
             {/* Pay Section */}
 
-            <motion.div
-                variants={{
-                    hidden: { visibility: "hidden", height: 0 },
-                    visible: { visibility: "visible", height: "80px" },
-                }}
-                animate={useDifferentWallet ? "visible" : "hidden"}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
-            >
-                <motion.div
-                    variants={{
-                        hidden: { x: 100, opacity: 0 },
-                        visible: { x: 0, opacity: 1 },
-                    }}
-                    animate={useDifferentWallet ? "visible" : "hidden"}
-                    transition={{
-                        duration: 0.4,
-                        ease: "easeInOut",
-                        delay: 0.1,
-                    }}
-                    className="w-full h-[80px] flex flex-col gap-y-1 items-start p-3 rounded-xl border border-gray-400"
-                >
-                    <h3 className="text-sm">Send to a different wallet</h3>
-                    <p className="text-md mt-1 text-gray-400">Wallet address</p>
-                </motion.div>
-            </motion.div>
+            <ExDiffWallet isDiffWallet={useDifferentWallet} />
             {/* Different Wallet Section */}
+
+            <ExWarning />
+            {/* Warning Section */}
 
             <motion.div
                 initial="hidden"
