@@ -3,7 +3,7 @@ import "./Layout.css";
 import Header from "./header/Header";
 import { useChainId } from "wagmi";
 import BoxWrapper from "@/features/wrapper/BoxWrapper";
-import { useStateContext } from "@/context/state";
+import { useStateContext } from "@/context/stateContext";
 import { useEffect } from "react";
 
 const Layout = () => {
@@ -33,7 +33,7 @@ const Layout = () => {
 
                 <div
                     id="main"
-                    className="w-100 min-h-[87.7vh] flex items-start justify-center pt-24"
+                    className="w-100 min-h-[87.7vh] flex items-start justify-center pt-10"
                 >
                     {chainList && <BoxWrapper />}
                 </div>

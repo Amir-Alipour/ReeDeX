@@ -4,23 +4,20 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ViewsState } from "../wrapper/BoxWrapper";
-import { Variants, motion } from "framer-motion";
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { AutoSizer, List } from "react-virtualized";
+import { useStateContext } from "@/context/stateContext";
+import { leftToRightAnimate } from "@/lib/framer-variants";
 import Token from "@/components/Token";
-import { useStateContext } from "@/context/state";
+import { useViewContext } from "@/context/viewContext";
 
-type TokensProps = {
-    viewHandler: React.Dispatch<React.SetStateAction<ViewsState>>;
-    onSelecting: "from" | "to";
-};
-
-const Tokens = ({ viewHandler, onSelecting }: TokensProps) => {
+const Tokens = () => {
     const { state, dispatch } = useStateContext();
+    const { state: viewState, dispatch: viewDispatch } = useViewContext();
 
-    const isFrom = () => (onSelecting === "from" ? true : false);
+    const isFrom = () => (viewState.onSelecting === "from" ? true : false);
     const getChain = () => (isFrom() ? state.fromChain : state.toChain);
 
     const [tokens, setTokens] = useState<Token[]>([]);
@@ -52,17 +49,23 @@ const Tokens = ({ viewHandler, onSelecting }: TokensProps) => {
         );
     };
 
+    const goToExchange = () =>
+        viewDispatch({
+            type: "SET_CURRENT_VIEW",
+            payload: "exchange",
+        });
+
     return (
         <>
             <motion.div
-                variants={animate}
+                variants={leftToRightAnimate}
                 initial="hidden"
                 animate="visible"
                 exit="exit"
                 className="flex items-center justify-between"
             >
                 <svg
-                    onClick={() => viewHandler("exchange")}
+                    onClick={() => goToExchange()}
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -79,10 +82,10 @@ const Tokens = ({ viewHandler, onSelecting }: TokensProps) => {
 
                 <h1 className="text-xl mr-5">
                     Exchange{" "}
-                    {onSelecting
+                    {viewState.onSelecting
                         .charAt(0)
                         .toUpperCase()
-                        .concat(onSelecting.slice(1))}
+                        .concat(viewState.onSelecting.slice(1))}
                 </h1>
 
                 <div></div>
@@ -90,7 +93,7 @@ const Tokens = ({ viewHandler, onSelecting }: TokensProps) => {
             {/* Title */}
 
             <motion.div
-                variants={animate}
+                variants={leftToRightAnimate}
                 initial="hidden"
                 animate="visible"
                 exit="exit"
@@ -141,7 +144,7 @@ const Tokens = ({ viewHandler, onSelecting }: TokensProps) => {
             {/* Chains Section */}
 
             <motion.div
-                variants={animate}
+                variants={leftToRightAnimate}
                 initial="hidden"
                 animate="visible"
                 exit="exit"
@@ -209,7 +212,8 @@ const Tokens = ({ viewHandler, onSelecting }: TokensProps) => {
                                                     payload: token,
                                                 });
                                             }
-                                            viewHandler("exchange");
+
+                                            goToExchange();
                                         }}
                                         data={
                                             [...tokens].filter(
@@ -236,30 +240,3 @@ const Tokens = ({ viewHandler, onSelecting }: TokensProps) => {
 };
 
 export default Tokens;
-
-const animate: Variants = {
-    hidden: {
-        x: 100,
-        opacity: 0,
-    },
-    visible: (delay = 0) => ({
-        x: 0,
-        opacity: 1,
-        transition: {
-            delay,
-            type: "spring",
-            duration: "0.3s",
-            stiffness: 120,
-            damping: 30,
-        },
-    }),
-    exit: {
-        x: 100,
-        opacity: 0,
-        transition: {
-            type: "spring",
-            stiffness: 260,
-            damping: 30,
-        },
-    },
-};
