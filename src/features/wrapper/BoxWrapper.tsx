@@ -3,6 +3,7 @@ import { AnimatePresence } from "framer-motion";
 import Tokens from "../tokens/Tokens";
 import { useViewContext } from "@/context/viewContext";
 import { ViewOptions } from "@/types/view";
+import Chains from "../chains/Chains";
 
 const BoxWrapper = () => {
     const { state: viewState } = useViewContext();
@@ -10,7 +11,7 @@ const BoxWrapper = () => {
     const Views: Record<ViewOptions, React.ReactNode> = {
         exchange: <Exchange key={"exchangeView"} />,
         tokens: <Tokens key={"tokensView"} />,
-        chains: <></>,
+        chains: <Chains key={"chainsView"} />,
     };
 
     return (

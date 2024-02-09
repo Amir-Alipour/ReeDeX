@@ -12,6 +12,7 @@ import { useStateContext } from "@/context/stateContext";
 import { leftToRightAnimate } from "@/lib/framer-variants";
 import Token from "@/components/Token";
 import { useViewContext } from "@/context/viewContext";
+import BackToBtn from "@/components/BackToBtn";
 
 const Tokens = () => {
     const { state, dispatch } = useStateContext();
@@ -49,47 +50,12 @@ const Tokens = () => {
         );
     };
 
-    const goToExchange = () =>
-        viewDispatch({
-            type: "SET_CURRENT_VIEW",
-            payload: "exchange",
-        });
-
     return (
         <>
-            <motion.div
-                variants={leftToRightAnimate}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="flex items-center justify-between"
-            >
-                <svg
-                    onClick={() => goToExchange()}
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-6 h-6 cursor-pointer"
-                >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-                    />
-                </svg>
-
-                <h1 className="text-xl mr-5">
-                    Exchange{" "}
-                    {viewState.onSelecting
-                        .charAt(0)
-                        .toUpperCase()
-                        .concat(viewState.onSelecting.slice(1))}
-                </h1>
-
-                <div></div>
-            </motion.div>
+            <BackToBtn
+                currentTitle={`Exchange ${viewState.onSelecting}`}
+                animate={leftToRightAnimate}
+            />
             {/* Title */}
 
             <motion.div
@@ -137,7 +103,15 @@ const Tokens = () => {
                             </TooltipProvider>
                         )
                 )}
-                <div className="flex items-center justify-center text-lg p-2.5 border border-gray-400 rounded-lg hover:border-gray-200 cursor-pointer">
+                <div
+                    onClick={() =>
+                        viewDispatch({
+                            type: "SET_CURRENT_VIEW",
+                            payload: "chains",
+                        })
+                    }
+                    className="flex items-center justify-center text-lg p-2.5 border border-gray-400 rounded-lg hover:border-gray-200 cursor-pointer"
+                >
                     +{state.chains?.length! - 9}
                 </div>
             </motion.div>
@@ -213,7 +187,10 @@ const Tokens = () => {
                                                 });
                                             }
 
-                                            goToExchange();
+                                            viewDispatch({
+                                                type: "SET_CURRENT_VIEW",
+                                                payload: "exchange",
+                                            });
                                         }}
                                         data={
                                             [...tokens].filter(
