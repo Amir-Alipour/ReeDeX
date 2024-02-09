@@ -2,6 +2,7 @@ import { StateActionType, StateType } from "@/types/state";
 import { createContext, useContext, useReducer } from "react";
 
 export const initialState: StateType = {
+    oldFromToken: null,
     fromToken: null,
     toToken: null,
     fromChain: null,
@@ -11,6 +12,7 @@ export const initialState: StateType = {
     amount: "",
     chains: undefined,
     walletChain: undefined,
+    balance: undefined,
 };
 
 export const reducer = (
@@ -18,6 +20,8 @@ export const reducer = (
     action: StateActionType
 ): StateType => {
     switch (action.type) {
+        case "SET_OLD_FROM_TOKEN":
+            return { ...state, oldFromToken: action.payload };
         case "SET_FROM_TOKEN":
             return { ...state, fromToken: action.payload };
         case "SET_TO_TOKEN":
@@ -36,6 +40,8 @@ export const reducer = (
             return { ...state, chains: action.payload };
         case "SET_WALLET_CHAIN":
             return { ...state, walletChain: action.payload };
+        case "SET_BALANCE":
+            return { ...state, balance: action.payload };
         default:
             return state;
     }

@@ -27,10 +27,10 @@ const Header = () => {
                     ReDeX
                 </h1>
                 <p className="text-sm md:text-auto">doesn't take a fee.</p>
-                <p className="text-xs md:text-auto break-words">
-                    Developed by{" "}
-                    <a href="https://github.com/amir-alipour" target="_blank">
-                        Amir Alipour
+                <p className="text-xs md:text-auto text-gray-400 break-words">
+                    open-source on {" "}
+                    <a className="text-white" href="https://github.com/amir-alipour/redex" target="_blank">
+                        github
                     </a>
                     .
                 </p>

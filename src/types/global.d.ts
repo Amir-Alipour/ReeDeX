@@ -7,8 +7,8 @@ declare global {
         symbol: string
         decimals: number
         name: string
-        coinKey: string
-        logoURI: string
+        coinKey?: string
+        logoURI?: string
         priceUSD: string
     }
 

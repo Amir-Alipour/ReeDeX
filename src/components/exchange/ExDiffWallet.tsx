@@ -28,7 +28,10 @@ const ExDiffWallet = ({ isDiffWallet }: { isDiffWallet: boolean }) => {
                 className="w-full h-[80px] flex flex-col gap-y-1 items-start p-3 rounded-xl border border-gray-400"
             >
                 <h3 className="text-sm">Send to a different wallet</h3>
-                <p className="text-md mt-1 text-gray-400">Wallet address</p>
+                <input
+                    className="w-full bg-transparent border-none outline-none h-full text-sm mt-1 text-gray-300"
+                    placeholder="Wallet address"
+                />
             </motion.div>
         </motion.div>
     );

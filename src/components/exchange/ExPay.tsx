@@ -13,26 +13,28 @@ const lifi = new LiFi({
 
 const ExPay = () => {
     const { state, dispatch } = useStateContext();
+    const { fromToken, oldFromToken } = state;
     const { dispatch: viewDispatch } = useViewContext();
     const { address } = useAccount();
-    const [balance, setBalance] = useState<TokenAmount[]>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        setBalance(undefined);
-        if (state.fromToken) {
+        if (fromToken && oldFromToken?.address !== fromToken?.address) {
+            dispatch({ type: "SET_OLD_FROM_TOKEN", payload: fromToken });
+            dispatch({ type: "SET_BALANCE", payload: undefined });
+
             setIsLoading(true);
             lifi.getTokenBalances(address as `0x${string}`, [
-                state.fromToken as Token,
-            ]).then((data) => {
-                setBalance(data);
+                fromToken as Token,
+            ]).then((data: TokenAmount[]) => {
+                dispatch({ type: "SET_BALANCE", payload: data[0] });
                 setIsLoading(false);
             });
         }
-    }, [state.fromToken]);
+    }, [fromToken]);
 
     useEffect(() => {
-        if (parseFloat(state.amount) > parseFloat(balance?.[0].amount!)) {
+        if (parseFloat(state.amount) > parseFloat(state.balance?.amount!)) {
             viewDispatch({ type: "SET_HAVE_WARNING", payload: true });
             viewDispatch({
                 type: "SET_WARNING_MESSAGE",
@@ -99,7 +101,7 @@ const ExPay = () => {
                                 <div
                                     onClick={() =>
                                         handleChangeAmount(
-                                            balance?.[0].amount as string
+                                            state.balance?.amount as string
                                         )
                                     }
                                     className="w-10 h-6 flex items-center justify-center mt-1.5 rounded-full bg-white/15 hover:bg-white/20 text-sm cursor-pointer"
@@ -113,9 +115,9 @@ const ExPay = () => {
                     <div className="w-full flex items-center justify-between">
                         <p className="text-xs font-light mt-1 text-gray-400">
                             $
-                            {balance
+                            {state.balance
                                 ? (
-                                      +balance[0].priceUSD * +state.amount
+                                      +state.balance?.priceUSD * +state.amount
                                   ).toFixed(2)
                                 : "0.00"}
                         </p>
@@ -128,8 +130,8 @@ const ExPay = () => {
                             state.fromToken && (
                                 <p className=" text-sm mt-1 text-gray-300">
                                     /{" "}
-                                    {balance
-                                        ? (+balance[0].amount).toFixed(4)
+                                    {state.balance
+                                        ? (+state.balance.amount).toFixed(4)
                                         : "0"}
                                 </p>
                             )

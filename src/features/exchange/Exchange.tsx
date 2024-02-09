@@ -7,14 +7,20 @@ import ReverseBtn from "@/components/exchange/ReverseBtn";
 import ExPay from "@/components/exchange/ExPay";
 import ExWarning from "@/components/exchange/ExWarning";
 import ExDiffWallet from "@/components/exchange/ExDiffWallet";
-import { useState } from "react";
+import { useViewContext } from "@/context/viewContext";
 
 const Exchange = () => {
-    const [useDifferentWallet, setUseDifferentWallet] = useState(false);
     const { state } = useStateContext();
+    const { state: viewState, dispatch: viewDispatch } = useViewContext();
 
     return (
-        <>
+        <motion.div
+            variants={rightToLeftAnimate}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="flex flex-col gap-y-5"
+        >
             <motion.h1
                 initial="hidden"
                 animate="visible"
@@ -52,7 +58,7 @@ const Exchange = () => {
             <ExPay />
             {/* Pay Section */}
 
-            <ExDiffWallet isDiffWallet={useDifferentWallet} />
+            <ExDiffWallet isDiffWallet={viewState.useDiffwallet} />
             {/* Different Wallet Section */}
 
             <ExWarning />
@@ -65,11 +71,21 @@ const Exchange = () => {
                 variants={rightToLeftAnimate}
                 className="flex gap-x-3"
             >
-                <button className="flex-1 h-[50px] rounded-full flex items-center justify-center bg-white text-black text-lg tracking-wide hover:shadow-xl hover:shadow-gray-900">
+                <button
+                    disabled={viewState.haveWarning}
+                    className={`${
+                        viewState.haveWarning && "cursor-not-allowed"
+                    } flex-1 h-[50px] rounded-full flex items-center justify-center bg-white text-black text-lg tracking-wide hover:shadow-xl hover:shadow-gray-900`}
+                >
                     Exchange
                 </button>
                 <div
-                    onClick={() => setUseDifferentWallet((prev) => !prev)}
+                    onClick={() =>
+                        viewDispatch({
+                            type: "SET_USE_DIFF_WALLET",
+                            payload: !viewState.useDiffwallet,
+                        })
+                    }
                     className="w-[50px] h-[50px] rounded-full border flex items-center justify-center cursor-pointer"
                 >
                     <svg
@@ -89,7 +105,7 @@ const Exchange = () => {
                 </div>
             </motion.div>
             {/* Footer Section */}
-        </>
+        </motion.div>
     );
 };
 

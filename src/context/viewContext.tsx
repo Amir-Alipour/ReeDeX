@@ -6,6 +6,8 @@ export const initialState: ViewType = {
     onSelecting: "from",
     haveWarning: false,
     warningMessage: "",
+    useDiffwallet: false,
+    diffWallet: "",
 };
 
 export const reducer = (state: ViewType, action: ViewActionType): ViewType => {
@@ -18,6 +20,10 @@ export const reducer = (state: ViewType, action: ViewActionType): ViewType => {
             return { ...state, haveWarning: action.payload };
         case "SET_WARNING_MESSAGE":
             return { ...state, warningMessage: action.payload };
+        case "SET_USE_DIFF_WALLET":
+            return { ...state, useDiffwallet: action.payload };
+        case "SET_DIFF_WALLET":
+            return { ...state, diffWallet: action.payload };
         default:
             return state;
     }
