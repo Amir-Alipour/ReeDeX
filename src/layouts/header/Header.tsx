@@ -20,20 +20,13 @@ const Header = () => {
     return (
         <div
             id="header"
-            className="w-100 min-h-[10vh] flex items-center justify-between gap-x-1 sm:gap-x-0 px-2 md:px-16 pt-5 text-white"
+            className="w-100 min-h-[10vh] flex flex-wrap  items-center justify-between gap-x-1 sm:gap-x-0 px-2 md:px-16 pt-5 text-white"
         >
             <div className="w-[140px] sm:w-auto flex flex-col justify-end gap-y-1">
                 <h1 className="text-xl md:text-4xl font-mono tracking-wider border-b pb-1">
                     ReDeX
                 </h1>
                 <p className="text-sm md:text-auto">doesn't take a fee.</p>
-                <p className="text-xs md:text-auto text-gray-400 break-words">
-                    open-source on {" "}
-                    <a className="text-white" href="https://github.com/amir-alipour/redex" target="_blank">
-                        github
-                    </a>
-                    .
-                </p>
             </div>
             <div>
                 {address ? (
@@ -41,7 +34,7 @@ const Header = () => {
                         open={popoverIsOpen}
                         onOpenChange={setPopoverIsOpen}
                     >
-                        <PopoverTrigger className="isolate rounded-xl bg-white/20 shadow-[0px_5px_100px_0px_#f7fafc] ring-1 ring-black/5 p-4 pl-2 sm:p-4 border flex items-center justify-between gap-x-1 sm:gap-x-3 sm:mr-3 mt-3">
+                        <PopoverTrigger className="isolate rounded-xl bg-white/20 shadow-[0px_5px_100px_-10px_#f7fafc] ring-1 ring-black/5 p-4 pl-2 sm:p-4 border flex items-center justify-between gap-x-1 sm:gap-x-3 sm:mr-3 mt-3">
                             <div className="relative">
                                 <img
                                     className="w-5 h-5 sm:w-auto sm:h-auto"

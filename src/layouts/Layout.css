@@ -1,16 +1,17 @@
 @keyframes fly {
     100% {
-        transform: rotate(1turn) translate(80px) rotate(-1turn);
+        transform: rotate(1turn) translate(100px) rotate(-1turn);
     }
 }
 
 @keyframes flyPlus {
     100% {
-        transform: rotate(-1turn) translate(100px) rotate(1turn);
+        transform: rotate(-1turn) translate(120px) rotate(1turn);
     }
 }
 
-#header, #main {
+#header,
+#main {
     position: relative;
     z-index: 10 !important;
 }
@@ -25,29 +26,29 @@
 
 .base {
     position: absolute;
-    filter: blur(65px);
-    opacity: 0.8;
+    filter: blur(100px);
+    opacity: 0.5;
 }
 
 .one {
     border-radius: 100%;
-    width: 800px;
-    height: 800px;
+    width: 1300px;
+    height: 1300px;
     background-color: #453cc6;
-    left: -50px;
+    left: -200px;
     top: -300px;
     z-index: 3;
     animation: fly 10s linear infinite;
-    transform: rotate(0) translate(80px) rotate(0);
+    transform: rotate(0) translate(100px) rotate(0);
 }
 
 .two {
     border-radius: 100%;
-    width: 650px;
-    height: 650px;
+    width: 1350px;
+    height: 1350px;
     bottom: -80px;
     right: -100px;
     background-color: #7d1cd1b8;
     animation: flyPlus 10s linear infinite;
-    transform: rotate(0) translate(100px) rotate(0);
+    transform: rotate(0) translate(120px) rotate(0);
 }

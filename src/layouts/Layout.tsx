@@ -5,6 +5,7 @@ import { useChainId } from "wagmi";
 import BoxWrapper from "@/features/wrapper/BoxWrapper";
 import { useStateContext } from "@/context/stateContext";
 import { useEffect } from "react";
+import Footer from "./footer/Footer";
 
 const Layout = () => {
     const { data: chainList } = useChains();
@@ -38,6 +39,9 @@ const Layout = () => {
                     {chainList && <BoxWrapper />}
                 </div>
                 {/* body section */}
+
+                <Footer />
+                {/* Footer Section */}
             </div>
         </div>
     );
