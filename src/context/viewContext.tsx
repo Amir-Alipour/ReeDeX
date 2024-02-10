@@ -1,5 +1,5 @@
 import { ViewType, ViewActionType } from "@/types/view";
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useReducer } from "react";
 
 export const initialState: ViewType = {
     currentView: "exchange",
@@ -29,7 +29,7 @@ export const reducer = (state: ViewType, action: ViewActionType): ViewType => {
     }
 };
 
-const ViewContext = createContext<{
+export const ViewContext = createContext<{
     state: ViewType;
     dispatch: React.Dispatch<ViewActionType>;
 }>(null!);
@@ -45,5 +45,3 @@ export const ViewProvider: React.FC<{ children: React.ReactNode }> = ({
         </ViewContext.Provider>
     );
 };
-
-export const useViewContext = () => useContext(ViewContext);

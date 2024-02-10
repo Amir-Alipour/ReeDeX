@@ -1,5 +1,5 @@
 import { StateActionType, StateType } from "@/types/state";
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useReducer } from "react";
 
 export const initialState: StateType = {
     oldFromToken: null,
@@ -47,7 +47,7 @@ export const reducer = (
     }
 };
 
-const StateContext = createContext<{
+export const StateContext = createContext<{
     state: StateType;
     dispatch: React.Dispatch<StateActionType>;
 }>(null!);
@@ -63,5 +63,3 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({
         </StateContext.Provider>
     );
 };
-
-export const useStateContext = () => useContext(StateContext);

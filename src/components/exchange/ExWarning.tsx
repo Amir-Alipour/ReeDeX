@@ -1,4 +1,4 @@
-import { useViewContext } from "@/context/viewContext";
+import { useViewContext } from "@/hooks";
 import { motion } from "framer-motion";
 
 const ExWarning = () => {

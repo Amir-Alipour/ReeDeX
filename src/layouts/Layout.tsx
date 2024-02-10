@@ -1,10 +1,9 @@
-import { useChains } from "@/hooks/useChains";
 import "./Layout.css";
-import Header from "./header/Header";
+import { useEffect } from "react";
+import { useChains, useStateContext } from "@/hooks";
 import { useChainId } from "wagmi";
 import BoxWrapper from "@/features/wrapper/BoxWrapper";
-import { useStateContext } from "@/context/stateContext";
-import { useEffect } from "react";
+import Header from "./header/Header";
 import Footer from "./footer/Footer";
 
 const Layout = () => {

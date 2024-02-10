@@ -1,8 +1,9 @@
-import Exchange from "../exchange/Exchange";
 import { AnimatePresence } from "framer-motion";
-import Tokens from "../tokens/Tokens";
-import { useViewContext } from "@/context/viewContext";
 import { ViewOptions } from "@/types/view";
+import { useViewContext } from "@/hooks";
+
+import Exchange from "../exchange/Exchange";
+import Tokens from "../tokens/Tokens";
 import Chains from "../chains/Chains";
 
 const BoxWrapper = () => {

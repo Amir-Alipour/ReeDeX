@@ -1,11 +1,10 @@
-import { useStateContext } from "@/context/stateContext";
 import { rightToLeftAnimate } from "@/lib/framer-variants";
 import { motion } from "framer-motion";
 import TokenLogo from "../TokenLogo";
 import { useAccount } from "wagmi";
 import { LiFi, Token, TokenAmount } from "@lifi/sdk";
 import { useEffect, useState } from "react";
-import { useViewContext } from "@/context/viewContext";
+import { useStateContext, useViewContext } from "@/hooks";
 
 const lifi = new LiFi({
     integrator: "ReDeX",

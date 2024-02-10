@@ -1,8 +1,7 @@
-import { useStateContext } from "@/context/stateContext";
-import { useViewContext } from "@/context/viewContext";
 import { rightToLeftAnimate } from "@/lib/framer-variants";
 import { motion } from "framer-motion";
 import TokenLogo from "../TokenLogo";
+import { useStateContext, useViewContext } from "@/hooks";
 
 type ExTokenProps = {
     title: string;

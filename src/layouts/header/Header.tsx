@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/popover";
 import WalletPopverButton from "@/components/WalletPopverButton";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { useStateContext } from "@/context/stateContext";
+import { useStateContext } from "@/hooks";
 
 const Header = () => {
     const { connect, connectors } = useConnect();

@@ -1,4 +1,4 @@
-import { useStateContext } from "@/context/stateContext";
+import { useStateContext } from "@/hooks";
 import { rightToLeftAnimate } from "@/lib/framer-variants";
 import { motion } from "framer-motion";
 

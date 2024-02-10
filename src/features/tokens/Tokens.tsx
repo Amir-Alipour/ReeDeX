@@ -1,25 +1,20 @@
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { AutoSizer, List } from "react-virtualized";
-import { useStateContext } from "@/context/stateContext";
 import { leftToRightAnimate } from "@/lib/framer-variants";
-import Token from "@/components/Token";
-import { useViewContext } from "@/context/viewContext";
 import BackToBtn from "@/components/BackToBtn";
+import TChain, { TMoreChainsBtn } from "@/components/tokens/TChain";
+import TSearch from "@/components/tokens/TSearch";
+import TokensList from "@/components/tokens/TokensList";
+import { useStateContext, useViewContext } from "@/hooks";
+import { isFrom } from "@/utils";
 
 const Tokens = () => {
-    const { state, dispatch } = useStateContext();
-    const { state: viewState, dispatch: viewDispatch } = useViewContext();
+    const { state } = useStateContext();
+    const { state: viewState } = useViewContext();
 
-    const isFrom = () => (viewState.onSelecting === "from" ? true : false);
-    const getChain = () => (isFrom() ? state.fromChain : state.toChain);
+    const getChain = () =>
+        isFrom(viewState.onSelecting) ? state.fromChain : state.toChain;
 
     const [tokens, setTokens] = useState<Token[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -42,14 +37,6 @@ const Tokens = () => {
         };
     }, [getChain()]);
 
-    const handleFilterTokens = (item: any) => {
-        return (
-            item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.address === searchTerm
-        );
-    };
-
     return (
         <>
             <BackToBtn
@@ -67,87 +54,16 @@ const Tokens = () => {
             >
                 {state.chains?.map(
                     (chain, index) =>
-                        index < 9 && (
-                            <TooltipProvider key={chain.id}>
-                                <Tooltip delayDuration={150}>
-                                    <TooltipTrigger
-                                        onClick={() => {
-                                            if (isFrom()) {
-                                                dispatch({
-                                                    type: "SET_FROM_CHAIN",
-                                                    payload: chain.id,
-                                                });
-                                            } else {
-                                                dispatch({
-                                                    type: "SET_TO_CHAIN",
-                                                    payload: chain.id,
-                                                });
-                                            }
-                                        }}
-                                        className={` p-2.5 border rounded-lg ${
-                                            getChain() === chain.id
-                                                ? "bg-white bg-opacity-25 border-white"
-                                                : "border-gray-400"
-                                        } hover:border-gray-200`}
-                                    >
-                                        <img
-                                            className="w-full rounded-full"
-                                            src={chain.logoURI}
-                                            alt={chain.name + "logo"}
-                                        />
-                                    </TooltipTrigger>
-                                    <TooltipContent className="bg-black/70 text-white border-none">
-                                        <p className="text-xs">{chain.name}</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
-                        )
+                        index < 9 && <TChain key={chain.id} chain={chain} />
                 )}
-                <div
-                    onClick={() =>
-                        viewDispatch({
-                            type: "SET_CURRENT_VIEW",
-                            payload: "chains",
-                        })
-                    }
-                    className="flex items-center justify-center text-lg p-2.5 border border-gray-400 rounded-lg hover:border-gray-200 cursor-pointer"
-                >
-                    +{state.chains?.length! - 9}
-                </div>
+                {/* Chains section */}
+
+                <TMoreChainsBtn />
+                {/* More chains buttons */}
             </motion.div>
             {/* Chains Section */}
 
-            <motion.div
-                variants={leftToRightAnimate}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                custom={0.1}
-                className="w-full h-[50px] flex items-center border border-gray-300 rounded-lg"
-            >
-                <input
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    type="text"
-                    placeholder="Search by token name or address"
-                    className="flex-1 h-full px-3 bg-transparent outline-none bordr-none"
-                />
-                <div className="w-[50px] h-full flex items-center justify-center">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-6 h-6"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                        />
-                    </svg>
-                </div>
-            </motion.div>
+            <TSearch searchHandler={setSearchTerm} />
             {/* Search Section */}
 
             <motion.div
@@ -166,49 +82,7 @@ const Tokens = () => {
                         Loading Tokens ...
                     </div>
                 ) : (
-                    <AutoSizer>
-                        {({ width, height }) => (
-                            <List
-                                width={width}
-                                height={height}
-                                rowHeight={60}
-                                rowRenderer={(props) => (
-                                    <Token
-                                        onclick={(token: Token) => {
-                                            if (isFrom()) {
-                                                dispatch({
-                                                    type: "SET_FROM_TOKEN",
-                                                    payload: token,
-                                                });
-                                            } else {
-                                                dispatch({
-                                                    type: "SET_TO_TOKEN",
-                                                    payload: token,
-                                                });
-                                            }
-
-                                            viewDispatch({
-                                                type: "SET_CURRENT_VIEW",
-                                                payload: "exchange",
-                                            });
-                                        }}
-                                        data={
-                                            [...tokens].filter(
-                                                handleFilterTokens
-                                            )[props.index]
-                                        }
-                                        key={props.key}
-                                        style={props.style}
-                                    />
-                                )}
-                                rowCount={
-                                    [...tokens].filter(handleFilterTokens)
-                                        .length
-                                }
-                                overscanRowCount={3}
-                            />
-                        )}
-                    </AutoSizer>
+                    <TokensList searchTerm={searchTerm} tokens={tokens} />
                 )}
             </motion.div>
             {/* Tokens Section */}

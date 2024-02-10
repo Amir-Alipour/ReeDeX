@@ -1,4 +1,4 @@
-import { useViewContext } from "@/context/viewContext";
+import { useViewContext } from "@/hooks";
 import { Variants, motion } from "framer-motion";
 
 type BackToExBtnProps = {

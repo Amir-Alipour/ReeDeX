@@ -1,4 +1,4 @@
-import { useStateContext } from "@/context/stateContext";
+import { useStateContext } from "@/hooks";
 
 type TokenLogoProps = {
     token: Token | null;
