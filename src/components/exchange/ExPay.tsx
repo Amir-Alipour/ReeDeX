@@ -18,7 +18,7 @@ const ExPay = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        if (fromToken && oldFromToken?.address !== fromToken?.address) {
+        if (fromToken && oldFromToken?.coinKey !== fromToken?.coinKey) {
             dispatch({ type: "SET_OLD_FROM_TOKEN", payload: fromToken });
             dispatch({ type: "SET_BALANCE", payload: undefined });
 

@@ -37,6 +37,20 @@ const Tokens = () => {
         };
     }, [getChain()]);
 
+    const getArrangedChains = () => {
+        const OutOfViewChain = [...(state.chains as Chain[])]?.filter(
+            (ch, i) => ch.id === getChain() && i > 9
+        )[0];
+        const restChains = [...(state.chains as Chain[])]?.filter(
+            (c) => c.id !== OutOfViewChain?.id
+        );
+        return OutOfViewChain
+            ? [OutOfViewChain, ...(restChains as Chain[])]
+            : state.chains;
+    };
+
+    console.log(getArrangedChains());
+
     return (
         <>
             <BackToBtn
@@ -52,8 +66,9 @@ const Tokens = () => {
                 exit="exit"
                 className="grid grid-cols-5 grid-rows-2 gap-4"
             >
-                {state.chains?.map(
+                {getArrangedChains()?.map(
                     (chain, index) =>
+                        chain &&
                         index < 9 && <TChain key={chain.id} chain={chain} />
                 )}
                 {/* Chains section */}
