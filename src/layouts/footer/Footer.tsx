@@ -5,7 +5,7 @@ const Footer = () => {
                 open-source on{" "}
                 <a
                     className="text-white"
-                    href="https://github.com/amir-alipour/redex"
+                    href="https://github.com/amir-alipour/reedex"
                     target="_blank"
                 >
                     GitHub

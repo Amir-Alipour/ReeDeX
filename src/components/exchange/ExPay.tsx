@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useStateContext, useViewContext } from "@/hooks";
 
 const lifi = new LiFi({
-    integrator: "ReDeX",
+    integrator: "ReeDeX",
 });
 
 const ExPay = () => {

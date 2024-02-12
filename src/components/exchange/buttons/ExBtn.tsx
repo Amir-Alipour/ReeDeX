@@ -32,7 +32,7 @@ const ExBtn = () => {
             axios
                 .get(`https://li.quest/v1/quote`, {
                     params: {
-                        integrator: "redex",
+                        integrator: "reedex",
                         fromChain: state.fromChain,
                         toChain: state.toChain,
                         fromToken: state.fromToken?.address,

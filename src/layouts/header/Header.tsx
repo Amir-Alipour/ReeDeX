@@ -23,8 +23,8 @@ const Header = () => {
             className="w-100 min-h-[10vh] flex flex-wrap  items-center justify-between gap-x-1 sm:gap-x-0 px-2 md:px-16 pt-5 text-white"
         >
             <div className="w-[140px] sm:w-auto flex flex-col justify-end gap-y-1">
-                <h1 className="text-xl md:text-4xl font-mono tracking-wider border-b pb-1">
-                    ReDeX
+                <h1 className="text-xl md:text-3xl font-mono tracking-wider border-b pb-1">
+                    ReeDeX
                 </h1>
                 <p className="text-sm md:text-auto">doesn't take a fee.</p>
             </div>
