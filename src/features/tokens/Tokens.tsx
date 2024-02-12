@@ -49,8 +49,6 @@ const Tokens = () => {
             : state.chains;
     };
 
-    console.log(getArrangedChains());
-
     return (
         <>
             <BackToBtn

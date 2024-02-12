@@ -1,4 +1,4 @@
-export type ViewOptions = "exchange" | "tokens" | "chains"
+export type ViewOptions = "exchange" | "tokens" | "chains" | "swap";
 
 export interface ViewType {
     currentView: ViewOptions;
@@ -10,7 +10,7 @@ export interface ViewType {
 }
 
 export type ViewActionType =
-    | { type: 'SET_CURRENT_VIEW'; payload: "exchange" | "tokens" | "chains" }
+    | { type: 'SET_CURRENT_VIEW'; payload: ViewOptions }
     | { type: 'SET_ON_SELECTING'; payload: "from" | "to" }
     | { type: 'SET_HAVE_WARNING'; payload: boolean }
     | { type: 'SET_WARNING_MESSAGE'; payload: string }

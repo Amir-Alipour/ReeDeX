@@ -4,6 +4,7 @@ import { config } from "./lib/wagmi-config";
 import Layout from "./layouts/Layout";
 import { StateProvider } from "./context/stateContext";
 import { ViewProvider } from "./context/viewContext";
+import { SwapProvider } from "./context/swapContext";
 
 const queryClient = new QueryClient();
 
@@ -13,7 +14,9 @@ function App() {
             <QueryClientProvider client={queryClient}>
                 <ViewProvider>
                     <StateProvider>
-                        <Layout />
+                        <SwapProvider>
+                            <Layout />
+                        </SwapProvider>
                     </StateProvider>
                 </ViewProvider>
             </QueryClientProvider>

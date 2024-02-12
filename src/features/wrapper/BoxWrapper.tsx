@@ -5,6 +5,7 @@ import { useViewContext } from "@/hooks";
 import Exchange from "../exchange/Exchange";
 import Tokens from "../tokens/Tokens";
 import Chains from "../chains/Chains";
+import Swap from "../swap/Swap";
 
 const BoxWrapper = () => {
     const { state: viewState } = useViewContext();
@@ -13,6 +14,7 @@ const BoxWrapper = () => {
         exchange: <Exchange key={"exchangeView"} />,
         tokens: <Tokens key={"tokensView"} />,
         chains: <Chains key={"chainsView"} />,
+        swap: <Swap key={"swapView"} />,
     };
 
     return (

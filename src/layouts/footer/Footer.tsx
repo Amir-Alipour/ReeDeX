@@ -16,7 +16,7 @@ const Footer = () => {
                 powered by{" "}
                 <a
                     className="text-white"
-                    href="https://apidocs.li.fi/reference/welcome-to-the-lifinance-api"
+                    href="https://apidocs.li.fi"
                     target="_blank"
                 >
                     LI.FI api

@@ -47,7 +47,7 @@ const ExPay = () => {
                 payload: "",
             });
         }
-    }, [state.amount]);
+    }, [state.amount, state.balance]);
 
     const handleChangeAmount = (amount: string) => {
         if (

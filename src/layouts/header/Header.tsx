@@ -58,7 +58,7 @@ const Header = () => {
                                     .reverse()}
                             </p>
                         </PopoverTrigger>
-                        <PopoverContent className="isolate rounded-xl bg-white/20 shadow-xl ring-1 ring-black/5 flex flex-col items-center gap-y-6">
+                        <PopoverContent className="isolate rounded-xl bg-white/50 shadow-xl ring-1 ring-black/5 flex flex-col items-center gap-y-6">
                             <div className="flex flex-col items-center gap-y-3">
                                 <div className="shadow-xl relative w-[90px] h-[90px] flex items-center justify-center bg-white rounded-full mt-4">
                                     <div>

@@ -13,14 +13,14 @@ const WalletPopverButton = ({
 }: WalletPopverButtonProps) => {
     const colorClasses = {
         red: {
-            fText: "text-red-400",
-            sText: "text-red-300",
+            fText: "text-red-600",
+            sText: "text-red-800",
             border: "border-red-500",
         },
         gray: {
-            fText: "text-gray-400",
-            sText: "text-gray-300",
-            border: "border-gray-400",
+            fText: "text-gray-200",
+            sText: "text-gray-100",
+            border: "border-gray-200",
         },
     };
 
