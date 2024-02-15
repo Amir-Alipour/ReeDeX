@@ -2,7 +2,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { leftToRightAnimate } from "@/lib/framer-variants";
-import BackToBtn from "@/components/BackToBtn";
+import BoxHeader from "@/components/BoxHeader";
 import TChain, { TMoreChainsBtn } from "@/components/tokens/TChain";
 import TSearch from "@/components/tokens/TSearch";
 import TokensList from "@/components/tokens/TokensList";
@@ -51,7 +51,7 @@ const Tokens = () => {
 
     return (
         <>
-            <BackToBtn
+            <BoxHeader
                 currentTitle={`Exchange ${viewState.onSelecting}`}
                 animate={leftToRightAnimate}
             />

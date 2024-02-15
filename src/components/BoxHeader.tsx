@@ -1,17 +1,27 @@
 import { useViewContext } from "@/hooks";
 import { Variants, motion } from "framer-motion";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "./ui/tooltip";
 
-type BackToExBtnProps = {
+type BoxHeaderProps = {
     currentTitle: string;
     animate: Variants;
     backTo?: "exchange" | "tokens" | "chains";
+    icon?: React.ReactNode;
+    iconTitle?: string;
 };
 
-const BackToBtn = ({
+const BoxHeader = ({
     animate,
     currentTitle,
     backTo = "exchange",
-}: BackToExBtnProps) => {
+    icon = null,
+    iconTitle,
+}: BoxHeaderProps) => {
     const { dispatch } = useViewContext();
 
     const goToExchange = () =>
@@ -44,11 +54,22 @@ const BackToBtn = ({
                 />
             </svg>
 
-            <h1 className="text-xl mr-5">{currentTitle}</h1>
+            <h1 className=" text-xl">{currentTitle}</h1>
 
-            <div></div>
+            <div className="w-5">
+                {icon && (
+                    <TooltipProvider>
+                        <Tooltip delayDuration={150}>
+                            <TooltipTrigger>{icon}</TooltipTrigger>
+                            <TooltipContent className="bg-black/70 text-white border-none">
+                                {iconTitle}
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                )}
+            </div>
         </motion.div>
     );
 };
 
-export default BackToBtn;
+export default BoxHeader;

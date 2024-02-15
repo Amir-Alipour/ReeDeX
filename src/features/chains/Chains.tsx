@@ -1,4 +1,4 @@
-import BackToBtn from "@/components/BackToBtn";
+import BoxHeader from "@/components/BoxHeader";
 import Chain from "@/components/Chain";
 import { useStateContext } from "@/hooks";
 import { rightToLeftAnimate } from "@/lib/framer-variants";
@@ -9,7 +9,7 @@ const Chains = () => {
 
     return (
         <div className="w-full h-[560px]">
-            <BackToBtn
+            <BoxHeader
                 currentTitle="Select chain"
                 animate={rightToLeftAnimate}
                 backTo="tokens"

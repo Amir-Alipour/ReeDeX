@@ -1,15 +1,10 @@
-import { useStateContext, useSwapContext, useViewContext } from "@/hooks";
-import axios, { AxiosError } from "axios";
-import { useState } from "react";
+import { useQoute, useStateContext, useViewContext } from "@/hooks";
 import { isAddress } from "viem";
-import { useAccount } from "wagmi";
 
 const ExBtn = () => {
     const { state } = useStateContext();
-    const { state: viewState, dispatch: viewDispatch } = useViewContext();
-    const { dispatch: swapDispatch } = useSwapContext();
-    const { address } = useAccount();
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { state: viewState } = useViewContext();
+    const { isLoading, loadQoute } = useQoute();
 
     const validate = (): boolean => {
         if (
@@ -28,53 +23,7 @@ const ExBtn = () => {
 
     const handleExchange = () => {
         if (validate()) {
-            setIsLoading(true);
-            axios
-                .get(`https://li.quest/v1/quote`, {
-                    params: {
-                        integrator: "reedex",
-                        fromChain: state.fromChain,
-                        toChain: state.toChain,
-                        fromToken: state.fromToken?.address,
-                        toToken: state.toToken?.address,
-                        fromAddress: address,
-                        ...(viewState.useDiffwallet && {
-                            toAddress: viewState.diffWallet,
-                        }),
-                        fromAmount: +state.amount * 1000000,
-                    },
-                })
-                .then((res) => {
-                    if (res.status === 200) {
-                        setIsLoading(false);
-                        swapDispatch({
-                            type: "SET_INCLUDED_STEPS",
-                            payload: res.data.includedSteps,
-                        });
-                        swapDispatch({
-                            type: "SET_TRANSACTION_REQUEST",
-                            payload: res.data.transactionRequest,
-                        });
-                        viewDispatch({
-                            type: "SET_CURRENT_VIEW",
-                            payload: "swap",
-                        });
-                    }
-                })
-                .catch((err: AxiosError<{ message: string }>) => {
-                    if (err.response) {
-                        setIsLoading(false);
-                        viewDispatch({
-                            type: "SET_HAVE_WARNING",
-                            payload: true,
-                        });
-                        viewDispatch({
-                            type: "SET_WARNING_MESSAGE",
-                            payload:
-                                err.response.data.message ?? "There is Error.",
-                        });
-                    }
-                });
+            loadQoute();
         }
     };
     // Exchange functionality

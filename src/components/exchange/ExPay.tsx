@@ -14,11 +14,15 @@ const ExPay = () => {
     const { state, dispatch } = useStateContext();
     const { fromToken, oldFromToken } = state;
     const { dispatch: viewDispatch } = useViewContext();
-    const { address } = useAccount();
+    const { address, isConnected } = useAccount();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        if (fromToken && oldFromToken?.coinKey !== fromToken?.coinKey) {
+        if (
+            fromToken &&
+            oldFromToken?.coinKey !== fromToken?.coinKey &&
+            isConnected
+        ) {
             dispatch({ type: "SET_OLD_FROM_TOKEN", payload: fromToken });
             dispatch({ type: "SET_BALANCE", payload: undefined });
 
@@ -30,7 +34,7 @@ const ExPay = () => {
                 setIsLoading(false);
             });
         }
-    }, [fromToken]);
+    }, [fromToken, isConnected]);
 
     useEffect(() => {
         if (parseFloat(state.amount) > parseFloat(state.balance?.amount!)) {
