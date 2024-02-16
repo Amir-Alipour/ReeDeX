@@ -8,6 +8,7 @@ export const initialState: ViewType = {
     warningMessage: "",
     useDiffwallet: false,
     diffWallet: "",
+    isBottomDrawerOpen: false,
 };
 
 export const reducer = (state: ViewType, action: ViewActionType): ViewType => {
@@ -24,6 +25,8 @@ export const reducer = (state: ViewType, action: ViewActionType): ViewType => {
             return { ...state, useDiffwallet: action.payload };
         case "SET_DIFF_WALLET":
             return { ...state, diffWallet: action.payload };
+        case "SET_BOTTOM_DRAWER_OPEN":
+            return { ...state, isBottomDrawerOpen: action.payload };
         default:
             return state;
     }

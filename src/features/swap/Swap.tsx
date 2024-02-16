@@ -1,16 +1,19 @@
+import BottomDrawer from "@/components/BottomDrawer";
 import BoxHeader from "@/components/BoxHeader";
 import SBtn from "@/components/swap/SBtn";
 import SGasFee from "@/components/swap/SGasFee";
+import SHighValueLoss from "@/components/swap/SHighValueLoss";
 import STitle from "@/components/swap/STitle";
 import SToken from "@/components/swap/SToken";
 import STool from "@/components/swap/STool";
+import SWarning from "@/components/swap/SWarning";
 import { useQoute, useSwapContext } from "@/hooks";
 import { leftToRightAnimate } from "@/lib/framer-variants";
 import { motion } from "framer-motion";
 
 const Swap = () => {
     const {
-        state: { includedSteps },
+        state: { includedSteps, highValueLoss },
     } = useSwapContext();
 
     const { isLoading, loadQoute } = useQoute();
@@ -23,6 +26,7 @@ const Swap = () => {
             initial="hidden"
             animate="visible"
             exit="exit"
+            className="relative"
         >
             <BoxHeader
                 currentTitle={`Swap`}
@@ -76,8 +80,18 @@ const Swap = () => {
             </div>
             {/* Swap Section */}
 
+            <SWarning />
+            {/* GasFee Error Section */}
+
             <SBtn />
             {/* Button Section */}
+
+            {/* <SHighValueLoss /> */}
+
+            <BottomDrawer>
+                {highValueLoss && <SHighValueLoss />}
+            </BottomDrawer>
+            {/* High value loss box */}
         </motion.div>
     );
 };

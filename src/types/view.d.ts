@@ -6,7 +6,8 @@ export interface ViewType {
     haveWarning: boolean;
     warningMessage: string;
     useDiffwallet: boolean;
-    diffWallet: string
+    diffWallet: string;
+    isBottomDrawerOpen: boolean;
 }
 
 export type ViewActionType =
@@ -15,4 +16,5 @@ export type ViewActionType =
     | { type: 'SET_HAVE_WARNING'; payload: boolean }
     | { type: 'SET_WARNING_MESSAGE'; payload: string }
     | { type: "SET_USE_DIFF_WALLET"; payload: boolean }
-    | { type: 'SET_DIFF_WALLET'; payload: string };
+    | { type: 'SET_DIFF_WALLET'; payload: string }
+    | { type: 'SET_BOTTOM_DRAWER_OPEN'; payload: boolean };

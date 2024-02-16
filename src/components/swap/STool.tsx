@@ -18,7 +18,7 @@ const STool = () => {
             </div>
 
             <div className="flex flex-col justify-start gap-y-1">
-                <p className="text-lg">{includedSteps[0].tool} via ReeDeX</p>
+                <p className="text-lg">{includedSteps[0].toolDetails.name} via ReeDeX</p>
 
                 {includedSteps.map((step) => (
                     <div key={step.id} className="flex gap-x-2">

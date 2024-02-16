@@ -1,10 +1,14 @@
-import { useSwapContext } from "@/hooks";
-import { useMemo } from "react";
+import { useStateContext, useSwapContext } from "@/hooks";
+import { useEffect, useMemo } from "react";
 
 const SGasFee = () => {
     const {
         state: { includedSteps },
+        dispatch: swapDispatch,
     } = useSwapContext();
+    const {
+        state: { balance },
+    } = useStateContext();
 
     const gasFee = useMemo(
         () =>
@@ -31,6 +35,30 @@ const SGasFee = () => {
                 ),
         [includedSteps]
     );
+
+    useEffect(() => {
+        const amount =
+            +includedSteps[0].action.fromAmount /
+            +["1"]
+                .concat(
+                    Array(includedSteps[0].action.fromToken.decimals).fill("0")
+                )
+                .join("");
+        // From Amount
+
+        const allCosts = gasFee.gas + gasFee.fee;
+        // GasCosts + FeeCosts
+
+        if (amount + allCosts > +balance?.amount!)
+            swapDispatch({ type: "SET_GASFEE_ERROR", payload: true });
+        else swapDispatch({ type: "SET_GASFEE_ERROR", payload: false });
+        // not enough balance for gas fee
+
+        if (amount <= allCosts)
+            swapDispatch({ type: "SET_HIGH_VALUE_LOSS", payload: true });
+        else swapDispatch({ type: "SET_HIGH_VALUE_LOSS", payload: false });
+        // high value loss warning
+    }, [gasFee.gas, gasFee.fee]);
 
     return (
         <div className="flex items-start gap-x-4">

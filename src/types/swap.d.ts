@@ -1,12 +1,15 @@
-
 export interface SwapType {
     includedSteps: IncludedStep[];
     transactionRequest: TransactionRequest | undefined;
+    gasFeeError: boolean;
+    highValueLoss: boolean;
 }
 
 export type SwapActionType =
     | { type: 'SET_INCLUDED_STEPS'; payload: IncludedSteps }
-    | { type: 'SET_TRANSACTION_REQUEST'; payload: TransactionRequest | undefined };
+    | { type: 'SET_TRANSACTION_REQUEST'; payload: TransactionRequest | undefined }
+    | { type: 'SET_GASFEE_ERROR'; payload: boolean }
+    | { type: 'SET_HIGH_VALUE_LOSS'; payload: boolean };
 
 
 export type TransactionRequest = {
