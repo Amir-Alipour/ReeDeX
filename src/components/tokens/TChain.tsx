@@ -7,7 +7,7 @@ import {
 import { useStateContext, useViewContext } from "@/hooks";
 import { isFrom } from "@/utils";
 
-const TChain = ({ chain }: { chain: Chain }) => {
+const TChain = ({ chain, isLoading }: { chain: Chain; isLoading: boolean }) => {
     const { state, dispatch } = useStateContext();
     const { state: viewState } = useViewContext();
 
@@ -19,6 +19,8 @@ const TChain = ({ chain }: { chain: Chain }) => {
             <Tooltip delayDuration={150}>
                 <TooltipTrigger
                     onClick={() => {
+                        if (isLoading) return;
+
                         if (isFrom(viewState.onSelecting)) {
                             dispatch({
                                 type: "SET_FROM_CHAIN",

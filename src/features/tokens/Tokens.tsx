@@ -67,7 +67,13 @@ const Tokens = () => {
                 {getArrangedChains()?.map(
                     (chain, index) =>
                         chain &&
-                        index < 9 && <TChain key={chain.id} chain={chain} />
+                        index < 9 && (
+                            <TChain
+                                key={chain.id}
+                                chain={chain}
+                                isLoading={isLoading}
+                            />
+                        )
                 )}
                 {/* Chains section */}
 

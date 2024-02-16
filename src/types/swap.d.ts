@@ -1,6 +1,6 @@
 
 export interface SwapType {
-    includedSteps: IncludedSteps;
+    includedSteps: IncludedStep[];
     transactionRequest: TransactionRequest | undefined;
 }
 
@@ -19,7 +19,7 @@ export type TransactionRequest = {
     chainId: number
 }
 
-export type IncludedSteps = Array<{
+export type IncludedStep = {
     id: string
     type: string
     action: {
@@ -104,4 +104,4 @@ export type IncludedSteps = Array<{
         name: string
         logoURI: string
     }
-}>
+}
