@@ -1,4 +1,9 @@
+import { useSwapContext, useViewContext } from "@/hooks";
+
 const SHighValueLoss = () => {
+    const { dispatch: viewDispatch } = useViewContext();
+    const { dispatch: swapDispatch } = useSwapContext();
+
     return (
         <>
             <div className="flex items-center justify-center w-[70px] h-[70px] rounded-full bg-orange-500/20 text-orange-400">
@@ -26,10 +31,26 @@ const SHighValueLoss = () => {
             </p>
 
             <div className="w-full flex gap-x-3">
-                <button className="w-full h-[50px] rounded-full border border-white opacity-80">
+                <button
+                    onClick={() =>
+                        viewDispatch({
+                            type: "SET_BOTTOM_DRAWER_OPEN",
+                            payload: false,
+                        })
+                    }
+                    className="w-full h-[50px] rounded-full border border-white opacity-80"
+                >
                     Cancel
                 </button>
-                <button className="w-full h-[50px] rounded-full bg-white text-black">
+                <button
+                    onClick={() =>
+                        swapDispatch({
+                            type: "SET_CONTINUE",
+                            payload: true,
+                        })
+                    }
+                    className="w-full h-[50px] rounded-full bg-white text-black"
+                >
                     Continue
                 </button>
             </div>

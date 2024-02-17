@@ -8,6 +8,7 @@ export interface ViewType {
     useDiffwallet: boolean;
     diffWallet: string;
     isBottomDrawerOpen: boolean;
+    isLoadingBalance: boolean;
 }
 
 export type ViewActionType =
@@ -17,4 +18,5 @@ export type ViewActionType =
     | { type: 'SET_WARNING_MESSAGE'; payload: string }
     | { type: "SET_USE_DIFF_WALLET"; payload: boolean }
     | { type: 'SET_DIFF_WALLET'; payload: string }
-    | { type: 'SET_BOTTOM_DRAWER_OPEN'; payload: boolean };
+    | { type: 'SET_BOTTOM_DRAWER_OPEN'; payload: boolean }
+    | { type: 'SET_IS_LOADING_BALANCE'; payload: boolean };

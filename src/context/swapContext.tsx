@@ -2,14 +2,19 @@ import { SwapActionType, SwapType } from "@/types/swap";
 import { createContext, useReducer } from "react";
 
 export const initialState: SwapType = {
+    action: undefined,
     includedSteps: [],
     transactionRequest: undefined,
     gasFeeError: false,
     highValueLoss: false,
+    continue: false,
+    txHash: undefined,
 };
 
 export const reducer = (state: SwapType, action: SwapActionType): SwapType => {
     switch (action.type) {
+        case "SET_ACTION":
+            return { ...state, action: action.payload };
         case "SET_INCLUDED_STEPS":
             return { ...state, includedSteps: action.payload };
         case "SET_TRANSACTION_REQUEST":
@@ -18,6 +23,12 @@ export const reducer = (state: SwapType, action: SwapActionType): SwapType => {
             return { ...state, gasFeeError: action.payload };
         case "SET_HIGH_VALUE_LOSS":
             return { ...state, highValueLoss: action.payload };
+        case "SET_CONTINUE":
+            return { ...state, continue: action.payload };
+        case "SET_TXHASH":
+            return { ...state, txHash: action.payload };
+        case "CLEAR_ALL":
+            return { ...initialState };
 
         default:
             return state;

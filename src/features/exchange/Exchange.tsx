@@ -7,10 +7,16 @@ import ExPay from "@/components/exchange/ExPay";
 import ExWarning from "@/components/exchange/ExWarning";
 import ExDiffWallet from "@/components/exchange/ExDiffWallet";
 import ExFooter from "@/components/exchange/ExFooter";
-import { useStateContext } from "@/hooks";
+import { useStateContext, useSwapContext } from "@/hooks";
+import { useEffect } from "react";
 
 const Exchange = () => {
     const { state } = useStateContext();
+    const { dispatch: swapDispatch } = useSwapContext();
+
+    useEffect(() => {
+        swapDispatch({ type: "CLEAR_ALL" });
+    }, []);
 
     return (
         <motion.div

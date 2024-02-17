@@ -3,22 +3,34 @@ import BoxHeader from "@/components/BoxHeader";
 import SBtn from "@/components/swap/SBtn";
 import SGasFee from "@/components/swap/SGasFee";
 import SHighValueLoss from "@/components/swap/SHighValueLoss";
+import SPending from "@/components/swap/SPending";
+import SSuccess from "@/components/swap/SSuccess";
 import STitle from "@/components/swap/STitle";
 import SToken from "@/components/swap/SToken";
 import STool from "@/components/swap/STool";
 import SWarning from "@/components/swap/SWarning";
-import { useQoute, useSwapContext } from "@/hooks";
+import { useQoute, useSwapContext, useViewContext } from "@/hooks";
 import { leftToRightAnimate } from "@/lib/framer-variants";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
+import { useTransactionReceipt } from "wagmi";
 
 const Swap = () => {
     const {
-        state: { includedSteps, highValueLoss },
+        state: { includedSteps, highValueLoss, txHash, continue: isContinue },
     } = useSwapContext();
+    const { dispatch: viewDispatch } = useViewContext();
 
     const { isLoading, loadQoute } = useQoute();
+    const { isSuccess: isConfirmed } = useTransactionReceipt({
+        hash: txHash,
+    });
 
-    console.log(includedSteps);
+    useEffect(() => {
+        if (isConfirmed) {
+            viewDispatch({ type: "SET_BOTTOM_DRAWER_OPEN", payload: true });
+        }
+    }, [isConfirmed]);
 
     return (
         <motion.div
@@ -69,6 +81,9 @@ const Swap = () => {
                 <STool />
                 {/* Tool Section */}
 
+                {txHash && <SPending />}
+                {/* Confirming Section */}
+
                 <SGasFee />
                 {/* Gas Fee Section */}
 
@@ -86,12 +101,11 @@ const Swap = () => {
             <SBtn />
             {/* Button Section */}
 
-            {/* <SHighValueLoss /> */}
-
             <BottomDrawer>
-                {highValueLoss && <SHighValueLoss />}
+                {highValueLoss && !isContinue && <SHighValueLoss />}
+                {isConfirmed && <SSuccess />}
             </BottomDrawer>
-            {/* High value loss box */}
+            {/* Drwer Section */}
         </motion.div>
     );
 };

@@ -30,6 +30,10 @@ export const useQoute = () => {
                 if (res.status === 200) {
                     setIsLoading(false);
                     swapDispatch({
+                        type: "SET_ACTION",
+                        payload: res.data.action,
+                    });
+                    swapDispatch({
                         type: "SET_INCLUDED_STEPS",
                         payload: res.data.includedSteps,
                     });

@@ -10,31 +10,34 @@ const SGasFee = () => {
         state: { balance },
     } = useStateContext();
 
-    const gasFee = useMemo(
-        () =>
-            includedSteps
-                .map((s) => {
-                    const fees = s.estimate.feeCosts
-                        .map((f) => parseFloat(f.amountUSD))
-                        .reduce((a, b) => a + b, 0);
+    const gasFee = useMemo(() => {
+        const GF = includedSteps
+            .map((s) => {
+                const fees = s.estimate.feeCosts
+                    .map((f) => parseFloat(f.amountUSD))
+                    .reduce((a, b) => a + b, 0);
 
-                    const gases = s.estimate.gasCosts
-                        .map((g) => parseFloat(g.amountUSD))
-                        .reduce((a, b) => a + b, 0);
+                const gases = s.estimate.gasCosts
+                    .map((g) => parseFloat(g.amountUSD))
+                    .reduce((a, b) => a + b, 0);
 
-                    return { fee: fees, gas: gases };
-                })
-                .reduce(
-                    (a, b) => {
-                        return {
-                            gas: a.gas + b.gas,
-                            fee: a.fee + b.fee,
-                        };
-                    },
-                    { gas: 0, fee: 0 }
-                ),
-        [includedSteps]
-    );
+                return { fee: fees, gas: gases };
+            })
+            .reduce(
+                (a, b) => {
+                    return {
+                        gas: a.gas + b.gas,
+                        fee: a.fee + b.fee,
+                    };
+                },
+                { gas: 0, fee: 0 }
+            );
+
+        return {
+            gas: GF.gas > 0 ? GF.gas : 0.01,
+            fee: GF.fee,
+        };
+    }, [includedSteps]);
 
     useEffect(() => {
         const amount =

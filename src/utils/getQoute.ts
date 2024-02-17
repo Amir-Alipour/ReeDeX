@@ -14,7 +14,7 @@ export const getQoute = (params: getQouteParams) => {
     return axios
         .get(`https://li.quest/v1/quote`, {
             params: {
-                integrator: "reedex",
+                integrator: "reedex.vercel.app",
                 ...params
             },
         })

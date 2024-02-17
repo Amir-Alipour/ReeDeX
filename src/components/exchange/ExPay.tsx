@@ -2,20 +2,21 @@ import { rightToLeftAnimate } from "@/lib/framer-variants";
 import { motion } from "framer-motion";
 import TokenLogo from "../TokenLogo";
 import { useAccount } from "wagmi";
-import { LiFi, Token, TokenAmount } from "@lifi/sdk";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useStateContext, useViewContext } from "@/hooks";
-
-const lifi = new LiFi({
-    integrator: "ReeDeX",
-});
+import { useBalance } from "@/hooks/useBalance";
+import type { Token } from "@lifi/sdk";
 
 const ExPay = () => {
     const { state, dispatch } = useStateContext();
     const { fromToken, oldFromToken } = state;
     const { dispatch: viewDispatch } = useViewContext();
     const { address, isConnected } = useAccount();
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const { isLoading, loadBalance } = useBalance({
+        wallet: address as `0x${string}`,
+        token: fromToken as Token,
+    });
 
     useEffect(() => {
         if (
@@ -25,14 +26,7 @@ const ExPay = () => {
         ) {
             dispatch({ type: "SET_OLD_FROM_TOKEN", payload: fromToken });
             dispatch({ type: "SET_BALANCE", payload: undefined });
-
-            setIsLoading(true);
-            lifi.getTokenBalances(address as `0x${string}`, [
-                fromToken as Token,
-            ]).then((data: TokenAmount[]) => {
-                dispatch({ type: "SET_BALANCE", payload: data[0] });
-                setIsLoading(false);
-            });
+            loadBalance();
         }
     }, [fromToken, isConnected]);
 

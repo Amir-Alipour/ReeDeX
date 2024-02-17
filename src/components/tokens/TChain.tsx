@@ -33,14 +33,14 @@ const TChain = ({ chain, isLoading }: { chain: Chain; isLoading: boolean }) => {
                             });
                         }
                     }}
-                    className={` p-2.5 border rounded-lg ${
+                    className={`p-1 sm:p-2.5 border rounded-lg ${
                         getChain() === chain.id
                             ? "bg-white bg-opacity-25 border-white"
                             : "border-gray-400"
                     } hover:border-gray-200`}
                 >
                     <img
-                        className="w-full rounded-full"
+                        className="w-[100%] aspect-square rounded-full"
                         src={chain.logoURI}
                         alt={chain.name + "logo"}
                     />

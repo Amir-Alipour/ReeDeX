@@ -1,58 +1,49 @@
 export interface SwapType {
+    action: SwapAction | undefined;
     includedSteps: IncludedStep[];
     transactionRequest: TransactionRequest | undefined;
     gasFeeError: boolean;
     highValueLoss: boolean;
+    continue: boolean;
+    txHash: `0x${string}` | undefined;
 }
 
 export type SwapActionType =
+    | { type: 'SET_ACTION'; payload: SwapAction }
     | { type: 'SET_INCLUDED_STEPS'; payload: IncludedSteps }
     | { type: 'SET_TRANSACTION_REQUEST'; payload: TransactionRequest | undefined }
     | { type: 'SET_GASFEE_ERROR'; payload: boolean }
-    | { type: 'SET_HIGH_VALUE_LOSS'; payload: boolean };
+    | { type: 'SET_HIGH_VALUE_LOSS'; payload: boolean }
+    | { type: 'SET_CONTINUE'; payload: boolean }
+    | { type: 'SET_TXHASH'; payload: `0x${string}` | undefined }
+    | { type: 'CLEAR_ALL' };
 
 
 export type TransactionRequest = {
-    data: string
-    to: string
-    value: string
-    gasPrice: string
-    gasLimit: string
-    from: string
+    data: `0x${string}`
+    to: `0x${string}`
+    value: bigint
+    gasPrice: bigint
+    gasLimit: bigint
+    from: `0x${string}`
     chainId: number
+}
+
+export type SwapAction = {
+    fromChainId: number
+    fromAmount: string
+    fromToken: Token
+    toChainId: number
+    toToken: Token
+    slippage: number
+    fromAddress: string
+    toAddress: string
 }
 
 export type IncludedStep = {
     id: string
     type: string
-    action: {
-        fromChainId: number
-        fromAmount: string
-        fromToken: {
-            address: string
-            chainId: number
-            symbol: string
-            decimals: number
-            name: string
-            coinKey: string
-            logoURI: string
-            priceUSD: string
-        }
-        toChainId: number
-        toToken: {
-            address: string
-            chainId: number
-            symbol: string
-            decimals: number
-            name: string
-            coinKey: string
-            logoURI: string
-            priceUSD: string
-        }
-        slippage: number
-        fromAddress: string
-        toAddress: string
-    }
+    action: SwapAction
     estimate: {
         tool: string
         fromAmount: string
