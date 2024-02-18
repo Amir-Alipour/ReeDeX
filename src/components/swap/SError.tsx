@@ -6,21 +6,21 @@ import {
     TooltipTrigger,
 } from "../ui/tooltip";
 
-const SSuccess = () => {
+const SError = () => {
     const {
         state: { chains, walletChain },
         dispatch,
     } = useStateContext();
     const { dispatch: viewDispatch } = useViewContext();
     const {
-        state: { includedSteps, action, txHash },
+        state: { includedSteps, txHash },
     } = useSwapContext();
 
     const swap = includedSteps[includedSteps.length - 1];
 
     return (
         <>
-            <div className="flex items-center justify-center w-[70px] h-[70px] rounded-full bg-green-500/20 text-green-400">
+            <div className="flex items-center justify-center w-[70px] h-[70px] rounded-full bg-red-500/20 text-red-400">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -32,37 +32,15 @@ const SSuccess = () => {
                     <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"
                     />
                 </svg>
             </div>
 
-            <p className="text-xl font-semibold">Swap successful</p>
+            <p className="text-xl font-semibold">Swap failed</p>
 
             <p className="text-gray-200">
-                There are now{" "}
-                {parseFloat(
-                    (
-                        +swap.estimate.toAmount /
-                        +["1"]
-                            .concat(
-                                Array(swap.action.toToken.decimals).fill("0")
-                            )
-                            .join("")
-                    )
-                        .toFixed(4)
-                        .toString()
-                )}{" "}
-                {swap.action.toToken.symbol} in {action?.toAddress.slice(0, 5)}
-                ...
-                {action?.toAddress
-                    .split("")
-                    .reverse()
-                    .slice(0, 4)
-                    .reverse()}{" "}
-                wallet on{" "}
-                {chains?.find((c) => c.id === swap.action.toChainId)?.name}{" "}
-                chain.
+                There is something wrong, Transaction failed.
             </p>
 
             <div className="w-full flex items-center justify-center gap-x-3 mb-2">
@@ -136,4 +114,4 @@ const SSuccess = () => {
     );
 };
 
-export default SSuccess;
+export default SError;

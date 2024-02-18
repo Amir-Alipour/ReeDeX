@@ -1,6 +1,7 @@
 import BottomDrawer from "@/components/BottomDrawer";
 import BoxHeader from "@/components/BoxHeader";
 import SBtn from "@/components/swap/SBtn";
+import SError from "@/components/swap/SError";
 import SGasFee from "@/components/swap/SGasFee";
 import SHighValueLoss from "@/components/swap/SHighValueLoss";
 import SPending from "@/components/swap/SPending";
@@ -22,15 +23,15 @@ const Swap = () => {
     const { dispatch: viewDispatch } = useViewContext();
 
     const { isLoading, loadQoute } = useQoute();
-    const { isSuccess: isConfirmed } = useTransactionReceipt({
+    const { isSuccess: isConfirmed, isError } = useTransactionReceipt({
         hash: txHash,
     });
 
     useEffect(() => {
-        if (isConfirmed) {
+        if (isConfirmed || isError) {
             viewDispatch({ type: "SET_BOTTOM_DRAWER_OPEN", payload: true });
         }
-    }, [isConfirmed]);
+    }, [isConfirmed, isError]);
 
     return (
         <motion.div
@@ -103,7 +104,8 @@ const Swap = () => {
 
             <BottomDrawer>
                 {highValueLoss && !isContinue && <SHighValueLoss />}
-                {isConfirmed && <SSuccess />}
+                {isConfirmed && !isError && <SSuccess />}
+                {isError && <SError />}
             </BottomDrawer>
             {/* Drwer Section */}
         </motion.div>

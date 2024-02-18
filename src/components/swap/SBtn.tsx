@@ -17,16 +17,16 @@ const SBtn = () => {
     } = useSwapContext();
     // Swap States
 
-    const {
-        state: { isBottomDrawerOpen },
-        dispatch: viewDispatch,
-    } = useViewContext();
+    const { dispatch: viewDispatch } = useViewContext();
     // View States
 
     const handleSwap = () => {
         if (highValueLoss && !isContinue) {
             viewDispatch({ type: "SET_BOTTOM_DRAWER_OPEN", payload: true });
-        } else {
+        } else if (
+            (!highValueLoss && !isContinue) ||
+            (highValueLoss && isContinue)
+        ) {
             viewDispatch({ type: "SET_BOTTOM_DRAWER_OPEN", payload: false });
             sendTransaction({
                 account: transactionRequest?.from,
@@ -49,7 +49,7 @@ const SBtn = () => {
     // Transaction global states
 
     useEffect(() => {
-        if (isBottomDrawerOpen && !hash) {
+        if (highValueLoss && isContinue && !hash) {
             handleSwap();
         }
     }, [isContinue]);
@@ -61,7 +61,9 @@ const SBtn = () => {
                 <div className="h-0"></div>
             ) : (
                 <button
-                    onClick={handleSwap}
+                    onClick={() => {
+                        handleSwap();
+                    }}
                     disabled={gasFeeError}
                     className={`${
                         gasFeeError && "cursor-not-allowed opacity-50"

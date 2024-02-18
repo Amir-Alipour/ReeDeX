@@ -3,8 +3,7 @@ import { motion } from "framer-motion";
 import TokenLogo from "../TokenLogo";
 import { useAccount } from "wagmi";
 import { useEffect } from "react";
-import { useStateContext, useViewContext } from "@/hooks";
-import { useBalance } from "@/hooks/useBalance";
+import { useStateContext, useViewContext, useBalance } from "@/hooks";
 import type { Token } from "@lifi/sdk";
 
 const ExPay = () => {
