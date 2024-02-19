@@ -9,13 +9,28 @@ import type { Token } from "@lifi/sdk";
 const ExPay = () => {
     const { state, dispatch } = useStateContext();
     const { fromToken, oldFromToken } = state;
-    const { dispatch: viewDispatch } = useViewContext();
+    const {
+        state: { isLoadingBalance: isLoading },
+        dispatch: viewDispatch,
+    } = useViewContext();
     const { address, isConnected } = useAccount();
 
-    const { isLoading, loadBalance } = useBalance({
+    const { loadBalance, balances } = useBalance({
         wallet: address as `0x${string}`,
-        token: fromToken as Token,
+        tokens: [fromToken as Token],
+        setLoading: (isLoading) => {
+            if (isLoading)
+                viewDispatch({ type: "SET_IS_LOADING_BALANCE", payload: true });
+            else
+                viewDispatch({ type: "SET_IS_LOADING_BALANCE", payload: false });
+        },
     });
+
+    useEffect(() => {
+        if (balances.length > 0) {
+            dispatch({ type: "SET_BALANCE", payload: balances[0] });
+        }
+    }, [balances]);
 
     useEffect(() => {
         if (

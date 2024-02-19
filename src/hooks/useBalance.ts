@@ -1,6 +1,5 @@
 import { LiFi, Token, TokenAmount } from "@lifi/sdk";
-import { useStateContext } from "./useStateContext";
-import { useViewContext } from "./useViewContext";
+import { useState } from "react";
 
 const lifi = new LiFi({
     integrator: "ReeDeX",
@@ -8,21 +7,20 @@ const lifi = new LiFi({
 
 type useBalanceProps = {
     wallet: `0x${string}`;
-    token: Token;
+    tokens: Token[];
+    setLoading?: (isLoading: boolean) => void;
 }
 
-export const useBalance = ({ wallet, token }: useBalanceProps) => {
-    const { dispatch } = useStateContext();
-    const { state: { isLoadingBalance }, dispatch: viewDispatch } = useViewContext();
-
+export const useBalance = ({ wallet, tokens, setLoading }: useBalanceProps) => {
+    const [balances, setBalances] = useState<TokenAmount[]>([]);
 
     const loadBalance = () => {
-        viewDispatch({ type: "SET_IS_LOADING_BALANCE", payload: true })
-        lifi.getTokenBalances(wallet, [token]).then((data: TokenAmount[]) => {
-            dispatch({ type: "SET_BALANCE", payload: data[0] });
-            viewDispatch({ type: "SET_IS_LOADING_BALANCE", payload: false })
+        setLoading?.(true);
+        lifi.getTokenBalances(wallet, [...tokens]).then((data: TokenAmount[]) => {
+            setBalances([...data]);
+            setLoading?.(false);
         });
     }
 
-    return { isLoading: isLoadingBalance, loadBalance };
+    return { loadBalance, balances };
 }
