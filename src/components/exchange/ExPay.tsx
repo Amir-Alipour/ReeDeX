@@ -15,22 +15,19 @@ const ExPay = () => {
     } = useViewContext();
     const { address, isConnected } = useAccount();
 
-    const { loadBalance, balances } = useBalance({
+    const { loadBalance } = useBalance({
         wallet: address as `0x${string}`,
         tokens: [fromToken as Token],
+        setState: (amounts) => {
+            dispatch({ type: "SET_BALANCE", payload: amounts[0] });
+        },
         setLoading: (isLoading) => {
-            if (isLoading)
-                viewDispatch({ type: "SET_IS_LOADING_BALANCE", payload: true });
-            else
-                viewDispatch({ type: "SET_IS_LOADING_BALANCE", payload: false });
+            viewDispatch({
+                type: "SET_IS_LOADING_BALANCE",
+                payload: isLoading,
+            });
         },
     });
-
-    useEffect(() => {
-        if (balances.length > 0) {
-            dispatch({ type: "SET_BALANCE", payload: balances[0] });
-        }
-    }, [balances]);
 
     useEffect(() => {
         if (

@@ -1,5 +1,4 @@
 import { LiFi, Token, TokenAmount } from "@lifi/sdk";
-import { useState } from "react";
 
 const lifi = new LiFi({
     integrator: "ReeDeX",
@@ -8,19 +7,19 @@ const lifi = new LiFi({
 type useBalanceProps = {
     wallet: `0x${string}`;
     tokens: Token[];
+    setState: (amounts: TokenAmount[]) => void;
     setLoading?: (isLoading: boolean) => void;
 }
 
-export const useBalance = ({ wallet, tokens, setLoading }: useBalanceProps) => {
-    const [balances, setBalances] = useState<TokenAmount[]>([]);
+export const useBalance = ({ wallet, tokens, setState, setLoading }: useBalanceProps) => {
 
     const loadBalance = () => {
         setLoading?.(true);
         lifi.getTokenBalances(wallet, [...tokens]).then((data: TokenAmount[]) => {
-            setBalances([...data]);
+            setState([...data]);
             setLoading?.(false);
         });
     }
 
-    return { loadBalance, balances };
+    return { loadBalance };
 }
