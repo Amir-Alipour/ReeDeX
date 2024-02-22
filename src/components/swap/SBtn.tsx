@@ -1,9 +1,15 @@
-import { useSwapContext, useViewContext } from "@/hooks";
+import { useSwapContext, useViewContext, useAllowance } from "@/hooks";
+import { decimalsFixer } from "@/utils/decimalsFixer";
 import { useEffect } from "react";
-import { useSendTransaction } from "wagmi";
+import { BaseError, useSendTransaction } from "wagmi";
 
 const SBtn = () => {
-    const { data: hash, sendTransaction } = useSendTransaction();
+    const {
+        data: hash,
+        sendTransaction,
+        isError,
+        error,
+    } = useSendTransaction();
     // Transaction Hook
 
     const {
@@ -12,6 +18,8 @@ const SBtn = () => {
             highValueLoss,
             continue: isContinue,
             transactionRequest,
+            action,
+            isAllowanceApproved,
         },
         dispatch: swapDispatch,
     } = useSwapContext();
@@ -20,7 +28,21 @@ const SBtn = () => {
     const { dispatch: viewDispatch } = useViewContext();
     // View States
 
-    const handleSwap = () => {
+    const { approveAllowance } = useAllowance({
+        tokenDecimals: action?.fromToken.decimals!,
+        tokenAddress: action?.fromToken.address as `0x${string}`,
+        amount: decimalsFixer(
+            +action?.fromAmount!,
+            action?.fromToken.decimals!,
+            "/"
+        ),
+        setHash: (txHash) => {
+            swapDispatch({ type: "SET_ALLOWANCE_TXHASH", payload: txHash });
+        },
+    });
+    // Approve Alloance
+
+    const handleSwap = async () => {
         if (highValueLoss && !isContinue) {
             viewDispatch({ type: "SET_BOTTOM_DRAWER_OPEN", payload: true });
         } else if (
@@ -28,15 +50,40 @@ const SBtn = () => {
             (highValueLoss && isContinue)
         ) {
             viewDispatch({ type: "SET_BOTTOM_DRAWER_OPEN", payload: false });
-            sendTransaction({
-                account: transactionRequest?.from,
-                to: transactionRequest?.to!,
-                data: transactionRequest?.data,
-                gas: transactionRequest?.gasLimit,
-                gasPrice: transactionRequest?.gasPrice,
-                value: transactionRequest?.value,
-                chainId: transactionRequest?.chainId,
+            viewDispatch({ type: "SET_IS_SWAPPING", payload: true });
+            viewDispatch({
+                type: "SET_IS_SWAP_REJECTED",
+                payload: false,
             });
+
+            if (!isAllowanceApproved) {
+                try {
+                    const isApproved = await approveAllowance();
+                    if (isApproved) {
+                        swapDispatch({
+                            type: "SET_IS_ALLOWANCE_APPROVED",
+                            payload: true,
+                        });
+
+                        sendTransaction({
+                            account: transactionRequest?.from,
+                            to: transactionRequest?.to!,
+                            data: transactionRequest?.data,
+                            gas: transactionRequest?.gasLimit,
+                            gasPrice: transactionRequest?.gasPrice,
+                            value: transactionRequest?.value,
+                            chainId: transactionRequest?.chainId,
+                        });
+                    }
+                } catch (error) {
+                    console.log("err", error);
+                    viewDispatch({ type: "SET_IS_SWAPPING", payload: false });
+                    viewDispatch({
+                        type: "SET_IS_SWAP_REJECTED",
+                        payload: true,
+                    });
+                }
+            }
         }
     };
     // Handle Swap Functionality
@@ -54,6 +101,25 @@ const SBtn = () => {
         }
     }, [isContinue]);
     // Continue trigger
+
+    useEffect(() => {
+        if (
+            isError &&
+            ((error as BaseError).shortMessage ===
+                "User rejected the request." ||
+                (error as BaseError).shortMessage ===
+                    "An internal error was received.")
+        ) {
+            viewDispatch({ type: "SET_IS_SWAP_REJECTED", payload: true });
+            swapDispatch({ type: "RELOAD_SWAP" });
+            viewDispatch({ type: "SET_IS_SWAPPING", payload: false });
+        }
+
+        if (!isError) {
+            viewDispatch({ type: "SET_IS_SWAP_REJECTED", payload: false });
+        }
+    }, [isError, error]);
+    // Transaction Reject Handling
 
     return (
         <>

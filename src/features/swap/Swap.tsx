@@ -9,6 +9,7 @@ import SSuccess from "@/components/swap/SSuccess";
 import STitle from "@/components/swap/STitle";
 import SToken from "@/components/swap/SToken";
 import STool from "@/components/swap/STool";
+import STxHash from "@/components/swap/STxHash";
 import SWarning from "@/components/swap/SWarning";
 import { useQoute, useSwapContext, useViewContext } from "@/hooks";
 import { leftToRightAnimate } from "@/lib/framer-variants";
@@ -18,20 +19,34 @@ import { useTransactionReceipt } from "wagmi";
 
 const Swap = () => {
     const {
-        state: { includedSteps, highValueLoss, txHash, continue: isContinue },
+        state: {
+            action,
+            includedSteps,
+            highValueLoss,
+            txHash,
+            allowanceTxHash,
+            continue: isContinue,
+            isAllowanceApproved,
+        },
+        dispatch: swapDispatch,
     } = useSwapContext();
-    const { dispatch: viewDispatch } = useViewContext();
+
+    const {
+        state: { isSwapping, isSwapRejected },
+        dispatch: viewDispatch,
+    } = useViewContext();
 
     const { isLoading, loadQoute } = useQoute();
-    const { isSuccess: isConfirmed, isError } = useTransactionReceipt({
+    const { isError, data } = useTransactionReceipt({
         hash: txHash,
     });
 
     useEffect(() => {
-        if (isConfirmed || isError) {
+        if (data?.status === "success" || data?.status === "reverted") {
             viewDispatch({ type: "SET_BOTTOM_DRAWER_OPEN", payload: true });
+            viewDispatch({ type: "SET_IS_SWAPPING", payload: false });
         }
-    }, [isConfirmed, isError]);
+    }, [data]);
 
     return (
         <motion.div
@@ -56,7 +71,20 @@ const Swap = () => {
                             isLoading &&
                             "cursor-not-allowed pointer-events-none animate-spin"
                         }`}
-                        onClick={() => loadQoute()}
+                        onClick={() => {
+                            if (!txHash) {
+                                swapDispatch({ type: "RELOAD_SWAP" });
+                                loadQoute();
+                                viewDispatch({
+                                    type: "SET_IS_SWAPPING",
+                                    payload: false,
+                                });
+                                viewDispatch({
+                                    type: "SET_IS_SWAP_REJECTED",
+                                    payload: false,
+                                });
+                            }
+                        }}
                     >
                         <path
                             strokeLinecap="round"
@@ -71,7 +99,9 @@ const Swap = () => {
             <div
                 className={`${
                     isLoading && "animate-pulse"
-                } w-full flex flex-col p-4 mt-5 gap-y-4 rounded-xl bg-black/20 border border-white/10`}
+                } w-full flex flex-col p-4 mt-5 gap-y-4 rounded-xl bg-black/20 border ${
+                    isSwapRejected ? "border-red-500" : "border-white/10"
+                }`}
             >
                 <STitle />
                 {/* Title Section */}
@@ -82,7 +112,35 @@ const Swap = () => {
                 <STool />
                 {/* Tool Section */}
 
-                {txHash && <SPending />}
+                {isSwapping && (
+                    <div className="flex gap-x-4">
+                        <SPending
+                            isDone={isAllowanceApproved}
+                            text={{
+                                pending: "Setting token allowance",
+                                done: "Token allowance approved",
+                            }}
+                        />
+                        {allowanceTxHash && (
+                            <STxHash
+                                txHash={allowanceTxHash}
+                                chainId={action?.fromChainId!}
+                            />
+                        )}
+                    </div>
+                )}
+
+                {/* Approve Allowance Section */}
+
+                {txHash && (
+                    <SPending
+                        isDone={data?.status === "success" && !isError}
+                        text={{
+                            pending: "Pending swap transaction",
+                            done: "Transaction successfuly.",
+                        }}
+                    />
+                )}
                 {/* Confirming Section */}
 
                 <SGasFee />
@@ -104,8 +162,8 @@ const Swap = () => {
 
             <BottomDrawer>
                 {highValueLoss && !isContinue && <SHighValueLoss />}
-                {isConfirmed && !isError && <SSuccess />}
-                {isError && <SError />}
+                {data?.status === "success" && !isError && <SSuccess />}
+                {data?.status === "reverted" && <SError />}
             </BottomDrawer>
             {/* Drwer Section */}
         </motion.div>

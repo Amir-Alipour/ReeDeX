@@ -7,15 +7,18 @@ import ExPay from "@/components/exchange/ExPay";
 import ExWarning from "@/components/exchange/ExWarning";
 import ExDiffWallet from "@/components/exchange/ExDiffWallet";
 import ExFooter from "@/components/exchange/ExFooter";
-import { useStateContext, useSwapContext } from "@/hooks";
+import { useStateContext, useSwapContext, useViewContext } from "@/hooks";
 import { useEffect } from "react";
 
 const Exchange = () => {
     const { state } = useStateContext();
     const { dispatch: swapDispatch } = useSwapContext();
+    const { dispatch: viewDispatch } = useViewContext();
 
     useEffect(() => {
         swapDispatch({ type: "CLEAR_ALL" });
+        viewDispatch({ type: "SET_IS_SWAPPING", payload: false });
+        viewDispatch({ type: "SET_IS_SWAP_REJECTED", payload: false });
     }, []);
 
     return (

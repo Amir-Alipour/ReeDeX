@@ -10,15 +10,19 @@ const Layout = () => {
     const { data: chainList } = useChains();
     const chainId = useChainId();
 
-    const { dispatch } = useStateContext();
+    const { state, dispatch } = useStateContext();
 
     useEffect(() => {
         dispatch({ type: "SET_CHAINS", payload: chainList });
-        dispatch({ type: "SET_FROM_CHAIN", payload: chainId });
         dispatch({
             type: "SET_WALLET_CHAIN",
             payload: chainList?.find((c) => c.id === chainId),
         });
+
+        if (state.fromChain === null) {
+            dispatch({ type: "SET_FROM_CHAIN", payload: chainId });
+            dispatch({ type: "SET_TO_CHAIN", payload: chainId });
+        }
     }, [chainList, chainId]);
 
     return (

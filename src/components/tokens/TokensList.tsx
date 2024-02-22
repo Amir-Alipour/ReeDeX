@@ -9,15 +9,49 @@ type TokensListProps = {
 };
 
 const TokensList = ({ searchTerm, tokens }: TokensListProps) => {
-    const { dispatch } = useStateContext();
+    const {
+        state: { fromToken, toToken },
+        dispatch,
+    } = useStateContext();
     const { state: viewState, dispatch: viewDispatch } = useViewContext();
 
-    const handleFilterTokens = (item: any) => {
+    const handleFilterTokens = (item: Token) => {
         return (
             item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.address === searchTerm
         );
+    };
+
+    const handleSetToken = (token: Token) => {
+        if (isFrom(viewState.onSelecting)) {
+            if (toToken?.address === token.address) {
+                dispatch({
+                    type: "SET_TO_TOKEN",
+                    payload: null,
+                });
+            }
+            dispatch({
+                type: "SET_FROM_TOKEN",
+                payload: token,
+            });
+        } else {
+            if (fromToken?.address === token.address) {
+                dispatch({
+                    type: "SET_FROM_TOKEN",
+                    payload: null,
+                });
+            }
+            dispatch({
+                type: "SET_TO_TOKEN",
+                payload: token,
+            });
+        }
+
+        viewDispatch({
+            type: "SET_CURRENT_VIEW",
+            payload: "exchange",
+        });
     };
 
     return (
@@ -29,24 +63,7 @@ const TokensList = ({ searchTerm, tokens }: TokensListProps) => {
                     rowHeight={60}
                     rowRenderer={(props) => (
                         <Token
-                            onclick={(token: Token) => {
-                                if (isFrom(viewState.onSelecting)) {
-                                    dispatch({
-                                        type: "SET_FROM_TOKEN",
-                                        payload: token,
-                                    });
-                                } else {
-                                    dispatch({
-                                        type: "SET_TO_TOKEN",
-                                        payload: token,
-                                    });
-                                }
-
-                                viewDispatch({
-                                    type: "SET_CURRENT_VIEW",
-                                    payload: "exchange",
-                                });
-                            }}
+                            onclick={(token: Token) => handleSetToken(token)}
                             data={
                                 [...tokens].filter(handleFilterTokens)[
                                     props.index

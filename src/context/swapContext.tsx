@@ -8,6 +8,8 @@ export const initialState: SwapType = {
     gasFeeError: false,
     highValueLoss: false,
     continue: false,
+    isAllowanceApproved: false,
+    allowanceTxHash: undefined,
     txHash: undefined,
 };
 
@@ -25,8 +27,22 @@ export const reducer = (state: SwapType, action: SwapActionType): SwapType => {
             return { ...state, highValueLoss: action.payload };
         case "SET_CONTINUE":
             return { ...state, continue: action.payload };
+        case "SET_IS_ALLOWANCE_APPROVED":
+            return { ...state, isAllowanceApproved: action.payload };
+        case "SET_ALLOWANCE_TXHASH":
+            return { ...state, allowanceTxHash: action.payload };
         case "SET_TXHASH":
             return { ...state, txHash: action.payload };
+        case "RELOAD_SWAP":
+            return {
+                ...state,
+                gasFeeError: false,
+                highValueLoss: false,
+                continue: false,
+                isAllowanceApproved: false,
+                allowanceTxHash: undefined,
+                txHash: undefined,
+            };
         case "CLEAR_ALL":
             return { ...initialState };
 

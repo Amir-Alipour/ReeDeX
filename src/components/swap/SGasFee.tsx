@@ -1,4 +1,5 @@
 import { useStateContext, useSwapContext } from "@/hooks";
+import { decimalsFixer } from "@/utils/decimalsFixer";
 import { useEffect, useMemo } from "react";
 
 const SGasFee = () => {
@@ -40,13 +41,11 @@ const SGasFee = () => {
     }, [includedSteps]);
 
     useEffect(() => {
-        const amount =
-            +includedSteps[0].action.fromAmount /
-            +["1"]
-                .concat(
-                    Array(includedSteps[0].action.fromToken.decimals).fill("0")
-                )
-                .join("");
+        const amount = decimalsFixer(
+            +includedSteps[0].action.fromAmount,
+            includedSteps[0].action.fromToken.decimals,
+            "/"
+        );
         // From Amount
 
         const allCosts = gasFee.gas + gasFee.fee;

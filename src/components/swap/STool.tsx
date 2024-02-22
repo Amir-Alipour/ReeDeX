@@ -1,4 +1,5 @@
 import { useStateContext, useSwapContext } from "@/hooks";
+import { decimalsFixer } from "@/utils/decimalsFixer";
 
 const STool = () => {
     const {
@@ -18,7 +19,9 @@ const STool = () => {
             </div>
 
             <div className="flex flex-col justify-start gap-y-1">
-                <p className="text-lg">{includedSteps[0].toolDetails.name} via ReeDeX</p>
+                <p className="text-lg">
+                    {includedSteps[0].toolDetails.name} via ReeDeX
+                </p>
 
                 {includedSteps.map((step) => (
                     <div key={step.id} className="flex gap-x-2">
@@ -43,31 +46,20 @@ const STool = () => {
                             </p>
                             <p className="text-xs text-gray-400 mt-1">
                                 {parseFloat(
-                                    (
-                                        +step.estimate.fromAmount /
-                                        +["1"]
-                                            .concat(
-                                                Array(
-                                                    step.action.fromToken
-                                                        .decimals
-                                                ).fill("0")
-                                            )
-                                            .join("")
+                                    decimalsFixer(
+                                        +step.estimate.fromAmount,
+                                        step.action.fromToken.decimals,
+                                        "/"
                                     )
                                         .toFixed(4)
                                         .toString()
                                 )}{" "}
                                 {step.action.fromToken.symbol} →{" "}
                                 {parseFloat(
-                                    (
-                                        +step.estimate.toAmount /
-                                        +["1"]
-                                            .concat(
-                                                Array(
-                                                    step.action.toToken.decimals
-                                                ).fill("0")
-                                            )
-                                            .join("")
+                                    decimalsFixer(
+                                        +step.estimate.toAmount,
+                                        step.action.toToken.decimals,
+                                        "/"
                                     )
                                         .toFixed(4)
                                         .toString()

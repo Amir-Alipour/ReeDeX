@@ -2,6 +2,7 @@ import { IncludedStep } from "@/types/swap";
 import TokenLogo from "../TokenLogo";
 import { useStateContext } from "@/hooks";
 import { useMemo } from "react";
+import { decimalsFixer } from "@/utils/decimalsFixer";
 
 const SToken = ({
     swap,
@@ -39,13 +40,10 @@ const SToken = ({
                 <div className="flex flex-col gap-y-1">
                     <p className="text-2xl">
                         {parseFloat(
-                            (
-                                +data.amount /
-                                +["1"]
-                                    .concat(
-                                        Array(data.token.decimals).fill("0")
-                                    )
-                                    .join("")
+                            decimalsFixer(
+                                +data.amount,
+                                data.token.decimals,
+                                "/"
                             )
                                 .toFixed(4)
                                 .toString()

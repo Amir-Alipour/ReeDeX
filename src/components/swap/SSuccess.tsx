@@ -1,14 +1,10 @@
 import { useStateContext, useSwapContext, useViewContext } from "@/hooks";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "../ui/tooltip";
+import STxHash from "./STxHash";
+import { decimalsFixer } from "@/utils/decimalsFixer";
 
 const SSuccess = () => {
     const {
-        state: { chains, walletChain },
+        state: { chains },
         dispatch,
     } = useStateContext();
     const { dispatch: viewDispatch } = useViewContext();
@@ -42,13 +38,10 @@ const SSuccess = () => {
             <p className="text-gray-200">
                 There are now{" "}
                 {parseFloat(
-                    (
-                        +swap.estimate.toAmount /
-                        +["1"]
-                            .concat(
-                                Array(swap.action.toToken.decimals).fill("0")
-                            )
-                            .join("")
+                    decimalsFixer(
+                        +swap.estimate.toAmount,
+                        swap.action.toToken.decimals,
+                        "/"
                     )
                         .toFixed(4)
                         .toString()
@@ -68,46 +61,7 @@ const SSuccess = () => {
             <div className="w-full flex items-center justify-center gap-x-3 mb-2">
                 <p className="w-[90%] truncate">{txHash}</p>
 
-                <TooltipProvider>
-                    <Tooltip delayDuration={150}>
-                        <TooltipTrigger>
-                            <div
-                                onClick={() =>
-                                    window
-                                        .open(
-                                            `${walletChain?.metamask.blockExplorerUrls[0]}tx/${txHash}`,
-                                            "_blank"
-                                        )
-                                        ?.focus()
-                                }
-                                className="w-[30px] flex items-center justify-center cursor-pointer"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="w-6 h-6"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
-                                    />
-                                </svg>
-                            </div>
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-black/70 text-white border-none">
-                            {
-                                chains?.find(
-                                    (c) => c.id === swap.action.toChainId
-                                )?.name
-                            }{" "}
-                            Scan
-                        </TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
+                <STxHash txHash={txHash} chainId={action?.fromChainId!} />
             </div>
 
             <div className="w-full flex gap-x-3">

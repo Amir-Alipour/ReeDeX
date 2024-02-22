@@ -10,6 +10,8 @@ export const initialState: ViewType = {
     diffWallet: "",
     isBottomDrawerOpen: false,
     isLoadingBalance: false,
+    isSwapping: false,
+    isSwapRejected: false,
 };
 
 export const reducer = (state: ViewType, action: ViewActionType): ViewType => {
@@ -30,6 +32,10 @@ export const reducer = (state: ViewType, action: ViewActionType): ViewType => {
             return { ...state, isBottomDrawerOpen: action.payload };
         case "SET_IS_LOADING_BALANCE":
             return { ...state, isLoadingBalance: action.payload };
+        case "SET_IS_SWAPPING":
+            return { ...state, isSwapping: action.payload };
+        case "SET_IS_SWAP_REJECTED":
+            return { ...state, isSwapRejected: action.payload };
         default:
             return state;
     }

@@ -1,10 +1,15 @@
 import { useQoute, useStateContext, useViewContext } from "@/hooks";
+import { useEffect } from "react";
 import { isAddress } from "viem";
+import { useAccount, useSwitchChain } from "wagmi";
 
 const ExBtn = () => {
     const { state } = useStateContext();
     const { state: viewState } = useViewContext();
     const { isLoading, loadQoute } = useQoute();
+
+    const { chainId } = useAccount();
+    const { isSuccess: isChainSiwthed, switchChain } = useSwitchChain();
 
     const validate = (): boolean => {
         if (
@@ -13,6 +18,7 @@ const ExBtn = () => {
             state.toChain &&
             state.toToken &&
             +state.amount > 0 &&
+            state.balance &&
             (viewState.diffWallet ? isAddress(viewState.diffWallet) : true) &&
             !viewState.haveWarning
         )
@@ -23,10 +29,20 @@ const ExBtn = () => {
 
     const handleExchange = () => {
         if (validate()) {
-            loadQoute();
+            if (chainId !== state.fromChain) {
+                switchChain({ chainId: state.fromChain! });
+            } else {
+                loadQoute();
+            }
         }
     };
     // Exchange functionality
+
+    useEffect(() => {
+        if (isChainSiwthed) {
+            handleExchange();
+        }
+    }, [isChainSiwthed]);
 
     return (
         <button

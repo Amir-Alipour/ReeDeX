@@ -5,6 +5,8 @@ export interface SwapType {
     gasFeeError: boolean;
     highValueLoss: boolean;
     continue: boolean;
+    isAllowanceApproved: boolean;
+    allowanceTxHash: `0x${string}` | undefined;
     txHash: `0x${string}` | undefined;
 }
 
@@ -15,7 +17,10 @@ export type SwapActionType =
     | { type: 'SET_GASFEE_ERROR'; payload: boolean }
     | { type: 'SET_HIGH_VALUE_LOSS'; payload: boolean }
     | { type: 'SET_CONTINUE'; payload: boolean }
+    | { type: 'SET_IS_ALLOWANCE_APPROVED'; payload: boolean }
+    | { type: 'SET_ALLOWANCE_TXHASH'; payload: `0x${string}` | undefined }
     | { type: 'SET_TXHASH'; payload: `0x${string}` | undefined }
+    | { type: 'RELOAD_SWAP' }
     | { type: 'CLEAR_ALL' };
 
 

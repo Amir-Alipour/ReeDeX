@@ -5,6 +5,7 @@ import { useViewContext } from "./useViewContext";
 import { useAccount } from "wagmi";
 import { getQoute } from "@/utils";
 import { AxiosError } from "axios";
+import { decimalsFixer } from "@/utils/decimalsFixer";
 
 export const useQoute = () => {
     const { state } = useStateContext();
@@ -24,7 +25,7 @@ export const useQoute = () => {
             ...(viewState.useDiffwallet && {
                 toAddress: viewState.diffWallet,
             }),
-            fromAmount: +state.amount * 1000000,
+            fromAmount: decimalsFixer(+state.amount, state.fromToken?.decimals!, "*"),
         })
             .then((res) => {
                 if (res.status === 200) {

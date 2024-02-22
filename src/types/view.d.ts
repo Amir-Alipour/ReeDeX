@@ -9,6 +9,8 @@ export interface ViewType {
     diffWallet: string;
     isBottomDrawerOpen: boolean;
     isLoadingBalance: boolean;
+    isSwapping: boolean;
+    isSwapRejected: boolean;
 }
 
 export type ViewActionType =
@@ -19,4 +21,6 @@ export type ViewActionType =
     | { type: "SET_USE_DIFF_WALLET"; payload: boolean }
     | { type: 'SET_DIFF_WALLET'; payload: string }
     | { type: 'SET_BOTTOM_DRAWER_OPEN'; payload: boolean }
-    | { type: 'SET_IS_LOADING_BALANCE'; payload: boolean };
+    | { type: 'SET_IS_LOADING_BALANCE'; payload: boolean }
+    | { type: 'SET_IS_SWAPPING'; payload: boolean }
+    | { type: 'SET_IS_SWAP_REJECTED'; payload: boolean };
