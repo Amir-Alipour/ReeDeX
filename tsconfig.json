@@ -6,7 +6,6 @@
         "module": "ESNext",
         "skipLibCheck": true,
         "typeRoots": ["./node_modules/@types", "./src/types"],
-
         /* Bundler mode */
         "moduleResolution": "bundler",
         "allowImportingTsExtensions": true,
@@ -14,13 +13,11 @@
         "isolatedModules": true,
         "noEmit": true,
         "jsx": "react-jsx",
-
         /* Linting */
         "strict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
-
         "baseUrl": ".",
         "paths": {
             "@/*": ["./src/*"]
