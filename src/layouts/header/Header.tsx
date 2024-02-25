@@ -170,19 +170,41 @@ const Header = () => {
                     </Popover>
                 ) : (
                     <>
-                        {connectors.map((connector) => (
-                            <button
-                                className="isolate rounded-xl bg-white/20 shadow-[0px_5px_100px_0px_#f7fafc] ring-1 ring-black/5 p-4 border flex items-center justify-between gap-x-3 mr-3 mt-3"
-                                key={connector.uid}
-                                onClick={() => connect({ connector })}
-                            >
-                                <p>{connector.name}</p>
-                                <img
-                                    src={connector.icon}
-                                    alt={connector.name + "icon"}
-                                />
-                            </button>
-                        ))}
+                        {connectors.length > 0 ? (
+                            <Popover>
+                                <PopoverTrigger className="isolate rounded-xl bg-white/20 shadow-[0px_15px_100px_-10px_#f7fafc] ring-1 ring-black/5 p-4 border">
+                                    Connect Wallet
+                                </PopoverTrigger>
+                                <PopoverContent
+                                    align="end"
+                                    className="max-h-[300px] overflow-y-auto"
+                                >
+                                    <p>Your available wallets</p>
+                                    {connectors.map((connector) => (
+                                        <button
+                                            className="w-full rounded p-4 border flex items-center justify-between gap-x-3 mr-3 mt-3"
+                                            key={connector.uid}
+                                            onClick={() =>
+                                                connect({ connector })
+                                            }
+                                        >
+                                            <p>{connector.name}</p>
+                                            <img
+                                                src={
+                                                    connector.icon ??
+                                                    "/metamask.svg"
+                                                }
+                                                alt={connector.name + "icon"}
+                                            />
+                                        </button>
+                                    ))}
+                                </PopoverContent>
+                            </Popover>
+                        ) : (
+                            <p className="text-xs p-3 border rounded">
+                                No wallet is available !
+                            </p>
+                        )}
                     </>
                 )}
             </div>

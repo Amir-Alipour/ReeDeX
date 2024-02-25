@@ -17,9 +17,9 @@ const TokensList = ({ searchTerm, tokens }: TokensListProps) => {
 
     const handleFilterTokens = (item: Token) => {
         return (
-            item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.address === searchTerm
+            item?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item?.symbol?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item?.address === searchTerm
         );
     };
 
