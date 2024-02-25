@@ -31,6 +31,7 @@ const TokensList = ({ searchTerm, tokens }: TokensListProps) => {
                     payload: null,
                 });
             }
+
             dispatch({
                 type: "SET_FROM_TOKEN",
                 payload: token,
@@ -42,6 +43,7 @@ const TokensList = ({ searchTerm, tokens }: TokensListProps) => {
                     payload: null,
                 });
             }
+
             dispatch({
                 type: "SET_TO_TOKEN",
                 payload: token,
