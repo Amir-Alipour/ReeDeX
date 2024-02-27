@@ -177,7 +177,7 @@ const Header = () => {
                                 </PopoverTrigger>
                                 <PopoverContent
                                     align="end"
-                                    className="max-h-[300px] overflow-y-auto"
+                                    className="max-h-[300px] overflow-y-auto overflow-x-hidden"
                                 >
                                     <p>Your available wallets</p>
                                     {connectors.map((connector) => (
